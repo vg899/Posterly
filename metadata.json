@@ -1,0 +1,6 @@
+{
+  "name": "AI Festival Poster & Quote Creator",
+  "description": "A premium AMOLED glassmorphic Android-native creator studio for designing, personalizing, and exporting HD festival posters and AI quotes, with real-time Firebase syncing.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

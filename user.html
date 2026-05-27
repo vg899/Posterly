@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI Premium Creator Studio</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Poppins (headings) & Inter (UI/body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* VARIABLES & THEME SETUP */
+    :root {
+      --bg-amoled: #000000;
+      --bg-glass: rgba(15, 15, 15, 0.7);
+      --bg-glass-active: rgba(28, 28, 30, 0.85);
+      --border-glow: rgba(139, 92, 246, 0.25);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      
+      --neon-purple: #8B5CF6;
+      --neon-purple-deep: #7C3AED;
+      --neon-cyan: #06B6D4;
+      --accent-glowing: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+      --accent-danger: #EF4444;
+      --accent-success: #10B981;
+      --accent-warning: #F59E0B;
+      
+      --font-display: 'Poppins', sans-serif;
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'Space Grotesk', sans-serif;
+      
+      --nav-height: 72px;
+      --transition-native: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    body {
+      background-color: var(--bg-amoled);
+      color: #F3F4F6;
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+
+    /* GLOBAL PHONE CONTAINER MOCK */
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background-color: var(--bg-amoled);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+      padding-bottom: calc(var(--nav-height) + 16px);
+    }
+
+    /* TYPOGRAPHY UTILS */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    p {
+      line-height: 1.5;
+    }
+
+    /* GLASS CARD LAYOUTS */
+    .glass-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: var(--transition-native);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 8px 32px 0 rgba(139, 92, 246, 0.15);
+    }
+
+    /* BUTTONS STYLE WITH CLICK INCENTIVE */
+    .btn-premium {
+      background: var(--accent-glowing);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-weight: 600;
+      text-transform: capitalize;
+      letter-spacing: 0.02em;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 24px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition-native);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35);
+    }
+
+    .btn-premium:active {
+      transform: scale(0.96);
+      opacity: 0.9;
+    }
+
+    .btn-premium::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
+      transform: rotate(30deg);
+      transition: 0.6s;
+    }
+
+    .btn-premium:hover::after {
+      left: 120%;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-glass);
+      color: #E5E7EB;
+      border-radius: 16px;
+      padding: 14px 24px;
+      font-size: 0.95rem;
+      font-family: var(--font-display);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition-native);
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.96);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* TEXT FIELDS */
+    .form-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-glass);
+      color: #FFF;
+      border-radius: 16px;
+      padding: 14px 18px;
+      width: 100%;
+      font-size: 0.95rem;
+      font-family: var(--font-sans);
+      transition: var(--transition-native);
+      margin-bottom: 12px;
+    }
+
+    .form-input:focus {
+      border-color: var(--neon-purple);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
+    }
+
+    /* SPLASH AND LOGIN SCREENS */
+    .screen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-amoled);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: var(--transition-native);
+    }
+
+    .login-container {
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    /* HEADER BANNER */
+    .app-header {
+      padding: 20px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .user-greeting-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-avatar-clickable {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--neon-purple);
+      object-fit: cover;
+      cursor: pointer;
+      background-color: #1a1a1a;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+    }
+
+    .greeting-text p {
+      font-size: 0.75rem;
+      color: #9CA3AF;
+    }
+
+    .greeting-text h3 {
+      font-size: 0.95rem;
+      color: #FFF;
+    }
+
+    .stats-hub-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .coin-meter {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-weight: bold;
+      font-size: 0.85rem;
+      color: #fbd38d;
+    }
+
+    .vip-elite-pill {
+      background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%);
+      color: #FFF;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    }
+
+    /* APP VIEW TOGGLER */
+    .app-screen-view {
+      display: none;
+      padding: 0 16px;
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .app-screen-view.active-view {
+      display: block;
+    }
+
+    /* SEARCH & HERO SECTION */
+    .hero-glowing-showcase {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      height: 160px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.8) 0%, rgba(6, 182, 212, 0.7) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+      box-shadow: 0 12px 24px rgba(124, 58, 237, 0.3);
+    }
+
+    .hero-glowing-showcase::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent);
+    }
+
+    .hero-glowing-showcase h2 {
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-glowing-showcase p {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* HORIZONTAL SCROLL CHIPS & SLIDERS */
+    .scroller-tabs-header {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .scroller-tabs-header::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip-tab {
+      flex: 0 0 auto;
+      padding: 8px 16px;
+      border-radius: 121px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-glass);
+      color: #9CA3AF;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-native);
+    }
+
+    .chip-tab.active-chip {
+      background: var(--accent-glowing);
+      color: #FFF;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+    }
+
+    /* GRID LAYOUTS */
+    .dynamic-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .creator-item-tile {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 1;
+      cursor: pointer;
+      transition: var(--transition-native);
+    }
+
+    .creator-item-tile:hover {
+      transform: translateY(-4px);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+
+    .creator-item-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tile-brand-shield {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.6rem;
+      font-weight: bold;
+      color: #fbd38d;
+    }
+
+    .tile-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tile-title {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #FFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+      margin-right: 8px;
+    }
+
+    .heart-like-button {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition-native);
+    }
+
+    .heart-like-button.liked {
+      color: #EF4444;
+      transform: scale(1.15);
+    }
+
+    /* DAILY CHECK-IN CALENDAR */
+    .streak-grid-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 15px;
+    }
+
+    .streak-day-cell {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 8px 4px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      transition: var(--transition-native);
+      cursor: pointer;
+    }
+
+    .streak-day-cell.claimed {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.25) 0%, rgba(6, 182, 212, 0.25) 100%);
+      border-color: var(--neon-purple);
+      color: #FFF;
+    }
+
+    .streak-day-cell h4 {
+      font-size: 0.8rem;
+      color: #fbd38d;
+      margin-top: 4px;
+    }
+
+    /* CREATIVE WORK BENCH (EDITOR) */
+    .canvas-preview-frame {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .canvas-wrapper {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: #121212;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    /* CANVAS ELEMENT NEEDS SPECIFIC SIZING */
+    #poster-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #111;
+    }
+
+    .canvas-floating-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(139, 92, 246, 0.95);
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #FFF;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+    }
+
+    /* CONTROL HUD PANEL */
+    .editor-control-hub {
+      margin-bottom: 24px;
+    }
+
+    .settings-control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    .control-label {
+      font-size: 0.85rem;
+      color: #9CA3AF;
+      font-weight: 500;
+    }
+
+    .mini-control-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-control-icon {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-glass);
+      color: #E5E7EB;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: var(--transition-native);
+    }
+
+    .btn-control-icon:active {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--neon-purple);
+      color: #FFF;
+      transform: scale(0.92);
+    }
+
+    .layer-selector {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border-glass);
+      color: #FFF;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+    }
+
+    .editor-tabs-switcher {
+      display: flex;
+      border-bottom: 1px solid var(--border-glass);
+      margin-bottom: 20px;
+    }
+
+    .editor-tab-button {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #6B7280;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: var(--transition-native);
+    }
+
+    .editor-tab-button.active-edit-tab {
+      color: var(--neon-purple);
+      border-bottom-color: var(--neon-purple);
+    }
+
+    /* DIRECT PRESETS SLIDER */
+    .template-presets-carousel {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 4px 0 16px;
+    }
+
+    .template-presets-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .preset-circular-item {
+      flex: 0 0 auto;
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: var(--transition-native);
+    }
+
+    .preset-circular-item.selected-preset {
+      border-color: var(--neon-purple);
+      box-shadow: 0 0 10px var(--neon-purple);
+    }
+
+    .preset-circular-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ANDROID LUXURY BOTTOM NAVIGATION BAR */
+    .android-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: var(--nav-height);
+      background: rgba(10, 10, 12, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 100;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .nav-column-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: #6B7280;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: var(--transition-native);
+      width: 65px;
+      height: 100%;
+      justify-content: center;
+    }
+
+    .nav-icon-wrapper {
+      position: relative;
+      font-size: 1.25rem;
+      transition: var(--transition-native);
+    }
+
+    .nav-column-item.active-nav {
+      color: var(--neon-purple);
+    }
+
+    .nav-column-item.active-nav .nav-icon-wrapper {
+      transform: translateY(-4px);
+    }
+
+    .nav-column-item .nav-dot-indicator {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--neon-purple);
+      opacity: 0;
+      transition: var(--transition-native);
+    }
+
+    .nav-column-item.active-nav .nav-dot-indicator {
+      opacity: 1;
+    }
+
+    /* MAIN PANEL TOGGLE ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* IN-APP NOTIFICATION BANNER */
+    .notification-hud-overlay {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      width: calc(100% - 32px);
+      max-width: 440px;
+      background: rgba(18, 18, 18, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      z-index: 1100;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .notification-hud-overlay.visible-banner {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .notif-bell-icon {
+      background: rgba(139, 92, 246, 0.2);
+      color: var(--neon-purple);
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    /* SLIDER & TOGGLE GATES */
+    .branding-toggle-housing {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .switch-piston {
+      width: 44px;
+      height: 24px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 100px;
+      position: relative;
+      transition: var(--transition-native);
+      border: 1px solid var(--border-glass);
+    }
+
+    .switch-piston::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #A1A1AA;
+      transition: var(--transition-native);
+    }
+
+    .branding-toggle-housing.toggled-on .switch-piston {
+      background: var(--accent-glowing);
+      border-color: transparent;
+    }
+
+    .branding-toggle-housing.toggled-on .switch-piston::after {
+      left: 22px;
+      background: #FFF;
+    }
+
+    /* SHIMMER EFFECT */
+    .shimmer-shroud {
+      background: linear-gradient(90deg, #18181B 25%, #27272A 50%, #18181B 75%);
+      background-size: 200% 100%;
+      animation: loadingShimmer 1.5s infinite;
+    }
+
+    @keyframes loadingShimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* DIALOG MODAL LAYOUT */
+    .app-dialog-scaffolding {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .app-dialog-scaffolding.active-modal {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .dialog-content-drawer {
+      width: 100%;
+      max-width: 480px;
+      background: #0D0D11;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px 28px 0 0;
+      padding: 24px 16px;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+    }
+
+    .app-dialog-scaffolding.active-modal .dialog-content-drawer {
+      transform: translateY(0);
+    }
+
+    .drawer-handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      margin: 0 auto 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ROOT PHONE VIEWPORT -->
+  <div class="app-viewport">
+
+    <!-- AUTHENTICATION SCREEN COVER (Firebase SDK Connected) -->
+    <div id="screen-auth" class="screen-overlay">
+      <div class="login-container">
+        <!-- Brand identity -->
+        <div style="margin-bottom: 40px;">
+          <div style="background: var(--accent-glowing); width: 80px; height: 80px; border-radius: 24px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(139, 92, 246, 0.5);">
+            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 2.2rem; color: #FFF;"></i>
+          </div>
+          <h1 style="font-family: var(--font-display); font-size: 1.8rem; background: var(--accent-glowing); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CRAFTO AI STUDIO</h1>
+          <p style="font-size: 0.85rem; color: #9CA3AF; margin-top: 6px;">Android Premium Festival Poster Creator</p>
+        </div>
+
+        <!-- AUTH TABS -->
+        <div id="auth-tabs-toggle" style="display: flex; gap: 10px; margin-bottom: 24px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px;">
+          <button id="btn-tab-login" class="btn-secondary" style="flex: 1; border: none; padding: 10px; font-size: 0.8rem; border-radius: 8px; background: var(--bg-glass-active);" onclick="toggleAuthTab('login')">Login</button>
+          <button id="btn-tab-signup" class="btn-secondary" style="flex: 1; border: none; padding: 10px; font-size: 0.8rem; border-radius: 8px; background: transparent;" onclick="toggleAuthTab('signup')">Sign Up</button>
+        </div>
+
+        <form id="auth-credentials-form" onsubmit="handleAuthSubmit(event)">
+          <!-- Dynamic Input rows based on signup selection -->
+          <div id="signup-extra-inputs" style="display: none;">
+            <input type="text" id="auth-name" class="form-input" placeholder="Your Full Name">
+            <input type="text" id="auth-username" class="form-input" placeholder="Choose Username">
+            <input type="tel" id="auth-number" class="form-input" placeholder="WhatsApp Number">
+          </div>
+          
+          <input type="email" id="auth-email" class="form-input" placeholder="E-mail Address" required>
+          <input type="password" id="auth-pass" class="form-input" placeholder="Password (Min 6 chars)" required>
+          
+          <!-- CTA triggers -->
+          <button type="submit" class="btn-premium" style="width: 100%; margin-top: 10px;">
+            <span id="auth-btn-label">Access Portal</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          </button>
+        </form>
+
+        <div style="display: flex; align-items: center; margin: 20px 0; gap: 10px;">
+          <span style="flex: 1; height: 1px; background: rgba(255,255,255,0.08);"></span>
+          <span style="font-size: 0.75rem; color: #6B7280;">OR EXPLORE</span>
+          <span style="flex: 1; height: 1px; background: rgba(255,255,255,0.08);"></span>
+        </div>
+
+        <button class="btn-secondary" style="width: 100%;" onclick="handleGuestLogin()">
+          <i class="fa-solid fa-user-secret"></i> Continue as Guest
+        </button>
+      </div>
+    </div>
+
+    <!-- IN-APP NOTIFICATION BANNER -->
+    <div id="inapp-notification" class="notification-hud-overlay">
+      <div class="notif-bell-icon">
+        <i class="fa-solid fa-bell"></i>
+      </div>
+      <div style="flex-grow: 1;">
+        <h4 id="notif-title" style="font-size: 0.85rem; color: #FFF; margin-bottom: 2px;">Daily Creative Alert!</h4>
+        <p id="notif-body" style="font-size: 0.75rem; color: #9CA3AF;">Create Diwali posters today and claim 10 bonus coins!</p>
+      </div>
+      <button style="background: none; border: none; color: #6B7280; cursor: pointer; font-size: 0.9rem;" onclick="dismissNotification()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- MAIN APP HEADER -->
+    <header class="app-header">
+      <div class="user-greeting-pill">
+        <img id="header-user-avatar" class="profile-avatar-clickable" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Avatar" onclick="switchView('profile')">
+        <div class="greeting-text">
+          <p id="header-salutation">Hello, Guest ✨</p>
+          <h3 id="header-user-name">Welcome Back</h3>
+        </div>
+      </div>
+      <div class="stats-hub-badge">
+        <div class="coin-meter">
+          <i class="fa-solid fa-coins" style="color: #FBBF24;"></i>
+          <span id="header-coin-count">0</span>
+        </div>
+        <div id="vip-header-badge" class="vip-elite-pill" style="display: none;">VIP</div>
+      </div>
+    </header>
+
+    <!-- VIEWS ENGINE -->
+
+    <!-- SCREEN 1: HOME PANEL -->
+    <div id="view-home" class="app-screen-view active-view">
+      
+      <!-- HERO SHOWCASE -->
+      <div class="hero-glowing-showcase">
+        <div class="tile-brand-shield" style="top:12px; right:12px;">CREATOR CLUB</div>
+        <h2>Unlock Your Brand</h2>
+        <p>Make stunning festival banners & daily inspirational quotes instantly.</p>
+      </div>
+
+      <!-- DAILY STREAK HARVEST -->
+      <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 1rem;"><i class="fa-solid fa-calendar-check" style="color:var(--neon-purple); margin-right:6px;"></i> Daily Rewards</h3>
+            <p style="font-size: 0.75rem; color: #9CA3AF; margin-top:2px;">Check-in daily to claim template unlock coins</p>
+          </div>
+          <button id="btn-claim-today" class="btn-premium" style="padding: 8px 14px; font-size: 0.75rem; border-radius: 10px;" onclick="claimDailyReward()">Claim Today</button>
+        </div>
+        
+        <div class="streak-grid-calendar">
+          <div class="streak-day-cell" id="streak-day-1">Day 1<h4>+10</h4></div>
+          <div class="streak-day-cell" id="streak-day-2">Day 2<h4>+15</h4></div>
+          <div class="streak-day-cell" id="streak-day-3">Day 3<h4>+20</h4></div>
+          <div class="streak-day-cell" id="streak-day-4">Day 4<h4>+25</h4></div>
+          <div class="streak-day-cell" id="streak-day-5">Day 5<h4>+30</h4></div>
+          <div class="streak-day-cell" id="streak-day-6">Day 6<h4>+40</h4></div>
+          <div class="streak-day-cell" id="streak-day-7">Day 7<h4>+50</h4></div>
+        </div>
+      </div>
+
+      <!-- REFERRAL CARD -->
+      <div class="glass-card" style="box-shadow: 0 0 15px rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.15);">
+        <h3 style="font-size: 1rem; color: var(--neon-cyan);"><i class="fa-solid fa-people-group" style="margin-right:6px;"></i> Creative Referral</h3>
+        <p style="font-size: 0.75rem; color: #9CA3AF; margin-top: 4px; margin-bottom: 12px;">Invite your designer buddies & get 100 free coins apiece.</p>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="invite-code-box" class="form-input" style="margin-bottom:0; font-family: var(--font-mono); font-weight: bold; text-align: center; font-size:0.85rem;" readonly>
+          <button class="btn-premium" style="padding: 10px 16px; background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%); border-radius:12px; box-shadow:none;" onclick="copyReferralCode()"><i class="fa-solid fa-copy"></i></button>
+        </div>
+      </div>
+
+      <!-- TRENDING FESTIVAL BANNER presets -->
+      <h3 style="font-size:1.1rem; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        Trending Templates <span><i class="fa-solid fa-arrow-trend-up" style="color: #F59E0B; font-size:0.95rem;"></i></span>
+      </h3>
+      <div class="dynamic-cards-grid" id="trending-templates-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- SCREEN 2: EXPLORE / SEARCH PANEL -->
+    <div id="view-explore" class="app-screen-view">
+      <!-- Search Box wrapper -->
+      <div style="position: sticky; top: var(--nav-height); z-index: 80; background: var(--bg-amoled); padding: 10px 0;">
+        <div style="position: relative;">
+          <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 16px; color: #6B7280;"></i>
+          <input type="text" id="search-query-field" class="form-input" placeholder="Search templates, festivals, categories..." style="padding-left: 45px; margin-bottom:0;" oninput="handleSearchQuery(this.value)">
+        </div>
+      </div>
+
+      <!-- Tabs system for categories -->
+      <div class="scroller-tabs-header" id="explore-categories-scroller">
+        <div class="chip-tab active-chip" data-category="all" onclick="selectSearchCategory('all')">All Library</div>
+        <div class="chip-tab" data-category="Festival" onclick="selectSearchCategory('Festival')">Festivals</div>
+        <div class="chip-tab" data-category="Business" onclick="selectSearchCategory('Business')">Business Branding</div>
+        <div class="chip-tab" data-category="Motivation" onclick="selectSearchCategory('Motivation')">AI Motivation</div>
+        <div class="chip-tab" data-category="Shayari" onclick="selectSearchCategory('Shayari')">Hindi Shayari</div>
+        <div class="chip-tab" data-category="Religious" onclick="selectSearchCategory('Religious')">Religious Devi</div>
+      </div>
+
+      <!-- Results Grid -->
+      <div class="dynamic-cards-grid" id="explore-results-grid">
+        <!-- Structured dynamically -->
+      </div>
+    </div>
+
+    <!-- SCREEN 3: CREATIVE CANVAS EDITOR WORKBENCH -->
+    <div id="view-create" class="app-screen-view">
+      
+      <!-- Toggle: Poster vs Quote card -->
+      <div class="editor-tabs-switcher">
+        <div id="btn-editor-poster" class="editor-tab-button active-edit-tab" onclick="switchEditorMode('poster')">Poster Generator</div>
+        <div id="btn-editor-quote" class="editor-tab-button" onclick="switchEditorMode('quote')">Quote designer</div>
+      </div>
+
+      <!-- LIVE PREVIEW CONTAINER -->
+      <div class="canvas-preview-frame">
+        <span class="canvas-floating-badge" id="canvas-premium-badge">PRO STYLING</span>
+        <div class="canvas-wrapper">
+          <canvas id="poster-canvas" width="1080" height="1350"></canvas>
+        </div>
+      </div>
+
+      <!-- EDITOR CONTROLS CAROUSEL -->
+      <div class="editor-control-hub">
+        
+        <!-- ROW 1: Preset Background Options -->
+        <h4 style="font-size:0.85rem; color:#9CA3AF; margin-bottom:10px;">Select Base Template Background</h4>
+        <div class="template-presets-carousel" id="editor-presets-carousel">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- ROW 2: Custom upload options (Mobile Cam/Gallery) -->
+        <div class="glass-card" style="padding:15px; margin-bottom:15px;">
+          <h4 style="font-size:0.85rem; margin-bottom:10px;"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--neon-purple); margin-right:6px;"></i> Multi-Media Insertion</h4>
+          <div style="display: flex; gap: 8px;">
+            <label class="btn-secondary" style="flex:1; padding: 10px; font-size: 0.75rem; cursor:pointer; text-align:center;">
+              <i class="fa-solid fa-image"></i> Swap Frame
+              <input type="file" id="upload-bg-input" accept="image/*" style="display:none;" onchange="handleImageInsertion(event, 'background')">
+            </label>
+            <label class="btn-secondary" style="flex:1; padding: 10px; font-size: 0.75rem; cursor:pointer; text-align:center;">
+              <i class="fa-solid fa-circle-user"></i> insert Brand Logo
+              <input type="file" id="upload-logo-input" accept="image/*" style="display:none;" onchange="handleImageInsertion(event, 'logo')">
+            </label>
+          </div>
+        </div>
+
+        <!-- ROW 3: Business Automation Branding Toggle -->
+        <div class="glass-card" style="padding:15px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h4 style="font-size:0.85rem;">Personal Branding Overlay</h4>
+            <p style="font-size:0.7rem; color:#9CA3AF;">Auto-inject Name, business logo & number at foot</p>
+          </div>
+          <div id="toggle-branding-bar" class="branding-toggle-housing toggled-on" onclick="toggleBrandingOverlay()">
+            <div class="switch-piston"></div>
+          </div>
+        </div>
+
+        <!-- ROW 4: AI Quote Generation Drawer Switch -->
+        <div id="ai-quote-builder-widget" class="glass-card" style="padding:15px; margin-bottom:15px; border-color: rgba(6,182,212,0.3); background: rgba(6,182,212,0.05); display:none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom:10px;">
+            <h4 style="font-size:0.85rem; color:var(--neon-cyan);"><i class="fa-solid fa-wand-magic-sparkles"></i> AI quote suggestions</h4>
+            <select id="ai-quote-category" class="layer-selector" style="background:#111;">
+              <option value="Motivation">Motivation</option>
+              <option value="Success">Success</option>
+              <option value="Love">Love</option>
+              <option value="Friendship">Friendship</option>
+              <option value="Hindi Shayari">Hindi Shayari</option>
+            </select>
+          </div>
+          <button class="btn-premium" style="width: 100%; padding: 10px; font-size:0.8rem; background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);box-shadow:none;" onclick="triggerAIQuoteGeneration()">
+            Generate AI quote
+          </button>
+        </div>
+
+        <!-- ROW 5: Manage Layers & Custom edits -->
+        <div class="glass-card" style="padding:15px; margin-bottom:15px;">
+          <div class="settings-control-row">
+            <span class="control-label">Select Text Layer</span>
+            <select id="editor-active-layer" class="layer-selector" onchange="switchActiveTextLayer(this.value)">
+              <option value="0">Main Heading</option>
+              <option value="1">Sub-Context</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <input type="text" id="layer-text-value" class="form-input" placeholder="Type text content here..." style="margin-bottom:0;" oninput="updateActiveLayerText(this.value)">
+          </div>
+
+          <!-- Color settings & sizing slider -->
+          <div class="settings-control-row">
+            <span class="control-label">Text Size</span>
+            <input type="range" id="size-slider" min="20" max="90" value="40" style="flex-grow:1; accent-color: var(--neon-purple);" oninput="setLayerSize(this.value)">
+          </div>
+
+          <!-- Font selector & styling -->
+          <div class="settings-control-row" style="margin-bottom:0;">
+            <span class="control-label">Color Preset</span>
+            <div class="mini-control-group">
+              <input type="color" id="text-color-custom" value="#ffffff" style="width:38px; height:38px; border-radius:10px; border:none; background:none; cursor:pointer;" oninput="setLayerColor(this.value)">
+              <button class="btn-control-icon" onclick="setLayerFont('Poppins')"><i class="fa-solid fa-font"></i></button>
+              <button class="btn-control-icon" onclick="alignTextLayer()"><i class="fa-solid fa-align-center"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 6: Dynamic Text Position buttons -->
+        <div class="glass-card" style="padding:15px; margin-bottom:15px;">
+          <h4 style="font-size: 0.85rem; margin-bottom: 12px; color:#9CA3AF;"><i class="fa-solid fa-arrows-up-down-left-right"></i> Position adjustments</h4>
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+            <button class="btn-secondary" style="padding:8px;" onclick="moveTextLayer('up')"><i class="fa-solid fa-chevron-up"></i></button>
+            <button class="btn-secondary" style="padding:8px;" onclick="moveTextLayer('down')"><i class="fa-solid fa-chevron-down"></i></button>
+            <button class="btn-secondary" style="padding:8px;" onclick="moveTextLayer('scale-up')"><i class="fa-solid fa-plus"></i></button>
+            <button class="btn-secondary" style="padding:8px;" onclick="moveTextLayer('left')"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="btn-secondary" style="padding:8px;" onclick="moveTextLayer('right')"><i class="fa-solid fa-chevron-right"></i></button>
+            <button class="btn-secondary" style="padding:8px;" onclick="moveTextLayer('scale-down')"><i class="fa-solid fa-minus"></i></button>
+          </div>
+        </div>
+
+        <!-- EXPORTS SECTION -->
+        <div style="display: flex; gap: 10px; margin-top:20px;">
+          <button class="btn-premium" style="flex:1;" onclick="handleDownloadPoster()">
+            <i class="fa-solid fa-download"></i> Save Draft
+          </button>
+          <button class="btn-secondary" style="flex:1;" onclick="openSocialShareModal()">
+            <i class="fa-solid fa-share-nodes"></i> Share Studio
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SCREEN 4: TRENDING CHART LEADERS -->
+    <div id="view-trending" class="app-screen-view">
+      <h2 style="margin-bottom:16px;"><i class="fa-solid fa-fire" style="color:#EF4444; margin-right:6px;"></i> Rising Creators</h2>
+      <p style="font-size:0.8rem; color:#9CA3AF; margin-bottom:20px;">Most popular creators and viral poster templates across Crafter studio.</p>
+
+      <!-- LEADERBOARD COMPACT -->
+      <div class="glass-card">
+        <h3 style="font-size: 1rem; margin-bottom: 15px;"><i class="fa-solid fa-trophy" style="color:#F59E0B; margin-right:8px;"></i> Designer Leaderboard</h3>
+        
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <!-- Leader item 1 -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-family:var(--font-mono); font-weight:bold; color: #F59E0B; width:20px;">#1</span>
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" style="width:34px; height:34px; border-radius:50%; object-fit:cover;">
+              <div>
+                <h4 style="font-size:0.8rem; color:#FFF;">Harshvardhan Tiwari <span class="vip-elite-pill" style="font-size:0.55rem;">PRO</span></h4>
+                <p style="font-size:0.7rem; color:#9CA3AF;">12.4k shares</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-circle-check" style="color:var(--neon-cyan); font-size:0.9rem;"></i>
+          </div>
+
+          <!-- Leader item 2 -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-family:var(--font-mono); font-weight:bold; color: #9CA3AF; width:20px;">#2</span>
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150" style="width:34px; height:34px; border-radius:50%; object-fit:cover;">
+              <div>
+                <h4 style="font-size:0.8rem; color:#FFF;">Amit Sharma</h4>
+                <p style="font-size:0.7rem; color:#9CA3AF;">8.2k shares</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-circle-check" style="color:var(--neon-cyan); font-size:0.9rem;"></i>
+          </div>
+
+          <!-- Leader item 3 -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-family:var(--font-mono); font-weight:bold; color: #D97706; width:20px;">#3</span>
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150" style="width:34px; height:34px; border-radius:50%; object-fit:cover;">
+              <div>
+                <h4 style="font-size:0.8rem; color:#FFF;">Priya Patel</h4>
+                <p style="font-size:0.7rem; color:#9CA3AF;">6.5k shares</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-circle-check" style="color:var(--neon-cyan); font-size:0.9rem;"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- REWARD STREAM -->
+      <div class="glass-card">
+        <h3 style="font-size:1rem; margin-bottom:10px;"><i class="fa-solid fa-gift" style="color:var(--neon-purple); margin-right:8px;"></i> unlock rewards leaderboard</h3>
+        <p style="font-size:0.75rem; color:#9CA3AF;">Top referrals this month receive full VIP lifetime badge values permanently.</p>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: USER PROFILE & BRANDING PANEL -->
+    <div id="view-profile" class="app-screen-view">
+      <!-- Profile Header -->
+      <div class="glass-card" style="text-align:center; padding:30px 20px;">
+        <div style="position:relative; display:inline-block; margin-bottom:15px;">
+          <img id="profile-edit-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--neon-purple); box-shadow:0 0 15px var(--neon-purple);">
+          <label style="position:absolute; bottom:0; right:0; background:var(--accent-glowing); width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #000; cursor:pointer;">
+            <i class="fa-solid fa-camera" style="font-size:0.8rem; color:#FFF;"></i>
+            <input type="file" id="upload-avatar-field" accept="image/*" style="display:none;" onchange="handleImageInsertion(event, 'avatar')">
+          </label>
+        </div>
+
+        <h3 id="profile-text-name" style="font-size:1.3rem;">Harshvardhan Tiwari</h3>
+        <p id="profile-text-username" style="font-size:0.8rem; color:#9CA3AF; margin-bottom:15px;">@harshvardhan39</p>
+        <div style="display:inline-flex; align-items:center; gap:8px;">
+          <span style="background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:10px; font-size:0.7rem; color:#E5E7EB;" id="profile-text-vip">Elite Tier</span>
+          <span class="vip-elite-pill">VIP Lifetime</span>
+        </div>
+      </div>
+
+      <!-- PERSONAL BRANDING PANEL -->
+      <div class="glass-card">
+        <h3 style="font-size:1.1rem; margin-bottom:15px;"><i class="fa-solid fa-id-card" style="color:var(--neon-purple); margin-right:8px;"></i> Brand branding coordinates</h3>
+        <p style="font-size:0.75rem; color:#9CA3AF; margin-bottom:15px;">These details are directly overlayed inside your custom made templates.</p>
+
+        <form id="branding-editor-form" onsubmit="saveBrandingProfile(event)">
+          <div style="margin-bottom:12px;">
+            <label class="control-label" style="display:block; margin-bottom:6px;">Your Name / business title</label>
+            <input type="text" id="brand-input-title" class="form-input" placeholder="e.g. Tiwari Tech Store" style="margin-bottom:0;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label class="control-label" style="display:block; margin-bottom:6px;">whatsApp Contact Number</label>
+            <input type="text" id="brand-input-phone" class="form-input" placeholder="e.g. +91 98765 43210" style="margin-bottom:0;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label class="control-label" style="display:block; margin-bottom:6px;">Instagram Business ID</label>
+            <input type="text" id="brand-input-instagram" class="form-input" placeholder="e.g. @tiwari_tech" style="margin-bottom:0;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label class="control-label" style="display:block; margin-bottom:6px;">Your Personal Bio</label>
+            <input type="text" id="brand-input-bio" class="form-input" placeholder="Enter short bio description..." style="margin-bottom:0;">
+          </div>
+
+          <button type="submit" class="btn-premium" style="width:100%; margin-top:10px;">
+            <i class="fa-solid fa-save"></i> Save Brand Details
+          </button>
+        </form>
+      </div>
+
+      <!-- LOGOUT OR VIP PURCHASE -->
+      <div style="margin-bottom:40px;">
+        <button class="btn-secondary" style="width:100%; color: var(--accent-danger); border-color: rgba(239, 68, 68, 0.2);" onclick="handleUserSignOut()">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign out Account
+        </button>
+      </div>
+    </div>
+
+
+    <!-- SOCIAL SHARE DIALOG DRAWER (BOTTOM DIALOG) -->
+    <div id="modal-share" class="app-dialog-scaffolding onclick-dismiss" onclick="closeShareModal(event)">
+      <div class="dialog-content-drawer">
+        <div class="drawer-handle"></div>
+        <h3 style="font-family:var(--font-display); text-align:center; font-size:1.1rem; margin-bottom:20px;">Share design studio</h3>
+        
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; text-align:center;">
+          <div style="cursor:pointer;" onclick="shareSocialIntent('whatsapp')">
+            <div style="background:#25D366; width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; box-shadow:0 0 10px rgba(37,211,102,0.5);">
+              <i class="fa-brands fa-whatsapp" style="font-size:1.6rem; color:#FFF;"></i>
+            </div>
+            <span style="font-size:0.75rem;">WhatsApp</span>
+          </div>
+
+          <div style="cursor:pointer;" onclick="shareSocialIntent('instagram')">
+            <div style="background:linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;">
+              <i class="fa-brands fa-instagram" style="font-size:1.6rem; color:#FFF;"></i>
+            </div>
+            <span style="font-size:0.75rem;">Instagram</span>
+          </div>
+
+          <div style="cursor:pointer;" onclick="shareSocialIntent('facebook')">
+            <div style="background:#1877F2; width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; box-shadow:0 0 10px rgba(24,119,242,0.5);">
+              <i class="fa-brands fa-facebook-f" style="font-size:1.5rem; color:#FFF;"></i>
+            </div>
+            <span style="font-size:0.75rem;">Facebook</span>
+          </div>
+
+          <div style="cursor:pointer;" onclick="shareSocialIntent('telegram')">
+            <div style="background:#229ED9; width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; box-shadow:0 0 10px rgba(34,158,217,0.5);">
+              <i class="fa-brands fa-telegram" style="font-size:1.6rem; color:#FFF;"></i>
+            </div>
+            <span style="font-size:0.75rem;">Telegram</span>
+          </div>
+        </div>
+
+        <button class="btn-secondary" style="width:100%; margin-top:24px;" onclick="closeModalDirect('modal-share')">Cancel Close</button>
+      </div>
+    </div>
+
+
+    <!-- ANDROID BOTTOM NAV BAR -->
+    <nav class="android-bottom-bar">
+      <!-- Nav Home -->
+      <a id="nav-home" class="nav-column-item active-nav" onclick="switchView('home')">
+        <div class="nav-icon-wrapper"><i class="fa-solid fa-house"></i></div>
+        <span>Home</span>
+        <div class="nav-dot-indicator"></div>
+      </a>
+      <!-- Nav Explore -->
+      <a id="nav-explore" class="nav-column-item" onclick="switchView('explore')">
+        <div class="nav-icon-wrapper"><i class="fa-solid fa-compass"></i></div>
+        <span>Explore</span>
+        <div class="nav-dot-indicator"></div>
+      </a>
+      <!-- Nav Create (Plus button style) -->
+      <a id="nav-create" class="nav-column-item" onclick="switchView('create')" style="position:relative; transform:translateY(-8px);">
+        <div style="background:var(--accent-glowing); width:54px; height:54px; border-radius:18px; display:flex; align-items:center; justify-content:center; box-shadow:0 5px 15px rgba(139, 92, 246, 0.4); color:#FFF; font-size:1.4rem; transition: var(--transition-native);">
+          <i class="fa-solid fa-plus"></i>
+        </div>
+        <span style="margin-top: 4px;">Studio</span>
+      </a>
+      <!-- Nav Trending -->
+      <a id="nav-trending" class="nav-column-item" onclick="switchView('trending')">
+        <div class="nav-icon-wrapper"><i class="fa-solid fa-fire-flame-curved"></i></div>
+        <span>Viral</span>
+        <div class="nav-dot-indicator"></div>
+      </a>
+      <!-- Nav Profile -->
+      <a id="nav-profile" class="nav-column-item" onclick="switchView('profile')">
+        <div class="nav-icon-wrapper"><i class="fa-solid fa-user-tie"></i></div>
+        <span>Me</span>
+        <div class="nav-dot-indicator"></div>
+      </a>
+    </nav>
+
+  </div>
+
+  <!-- FIREBASE CLIENT IMPLEMENTATION MODULES -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, child, update, push, onValue, off, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // GLOBAL APP STATE ENGINE
+    window.appState = {
+      firebaseReady: false,
+      user: null,
+      coins: 50,
+      streak: 1,
+      lastCheckIn: null,
+      vip: false,
+      currency: 'INR',
+      branding: {
+        name: "My Tiwary Studio",
+        phone: "+91 9988776655",
+        instagram: "@tiwari_studio",
+        logo: null
+      },
+      activeView: "home",
+      editorMode: "poster", // poster | quote
+      activeTextLayer: 0, // 0: title, 1: subtitle
+      textLayers: [
+        { text: "Celebrate Joyful Holi! 🎉", x: 0.5, y: 0.25, size: 48, color: "#FFFFFF", font: "Poppins", align: "center" },
+        { text: " Tiwari Art Group & Branded Products", x: 0.5, y: 0.88, size: 28, color: "#67e8f9", font: "Poppins", align: "center" }
+      ],
+      templates: [],
+      quotes: [],
+      currentBackground: null,
+      brandLogoImg: null,
+      brandingToggled: true,
+      authTab: 'login'
+    };
+
+    // CURATED STATIC TEMPLATE PRESENTS (FALLBACK DATABASE)
+    const fallbackTemplates = [
+      {
+        id: "t1",
+        title: "Happy Holi Neon Spark",
+        category: "Holi",
+        image: "https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&q=80&w=800",
+        isPremium: false,
+        useCount: 420,
+        likes: 180,
+        textLayers: [
+          { text: "Bura Na Mano Holi Hai! 🎉", x: 0.5, y: 0.25, size: 46, color: "#FFFFFF" },
+          { text: "Bringing color into your world", x: 0.5, y: 0.88, size: 27, color: "#06B6D4" }
+        ]
+      },
+      {
+        id: "t2",
+        title: "Diwali Golden Radiance",
+        category: "Diwali",
+        image: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&q=80&w=800",
+        isPremium: true,
+        useCount: 680,
+        likes: 310,
+        textLayers: [
+          { text: "Happy Shubh Deepavali 🌟", x: 0.5, y: 0.22, size: 48, color: "#FBBF24" },
+          { text: "May light conquer darkness", x: 0.5, y: 0.88, size: 26, color: "#FFFFFF" }
+        ]
+      },
+      {
+        id: "t3",
+        title: "Eid Mubarak Crescent",
+        category: "Eid",
+        image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&q=80&w=800",
+        isPremium: false,
+        useCount: 290,
+        likes: 120,
+        textLayers: [
+          { text: "Eid Al-Adha Mubarak 🌙", x: 0.5, y: 0.24, size: 45, color: "#10B981" },
+          { text: "Blessed wishes to your kinship", x: 0.5, y: 0.88, size: 25, color: "#FFF" }
+        ]
+      },
+      {
+        id: "t4",
+        title: "Daily Focus Motivation",
+        category: "Motivation",
+        image: "https://images.unsplash.com/photo-1519750783826-e2420f4d687c?auto=format&fit=crop&q=80&w=800",
+        isPremium: false,
+        useCount: 890,
+        likes: 450,
+        textLayers: [
+          { text: "WIN THE DAY 🎯", x: 0.5, y: 0.35, size: 55, color: "#BFDBFE" },
+          { text: "Success follows high impact action", x: 0.5, y: 0.86, size: 26, color: "#4B5563" }
+        ]
+      },
+      {
+        id: "t5",
+        title: "Tricolor Flag Day",
+        category: "Independence Day",
+        image: "https://images.unsplash.com/photo-1532375811409-e85c077b819f?auto=format&fit=crop&q=80&w=800",
+        isPremium: true,
+        useCount: 1500,
+        likes: 720,
+        textLayers: [
+          { text: "AMRIT MAHOTSAV 🇮🇳", x: 0.5, y: 0.2, size: 50, color: "#F97316" },
+          { text: "Proud citizens of digital India", x: 0.5, y: 0.88, size: 26, color: "#10B981" }
+        ]
+      }
+    ];
+
+    let dbInstance = null;
+
+    // INITIALIZE FIREBASE API CALLS SECURELY
+    async function initFirebaseConnection() {
+      try {
+        const response = await fetch("/api/firebase-config");
+        if (!response.ok) throw new Error("Cloud config error");
+        const config = await response.json();
+        
+        const app = initializeApp(config);
+        const auth = getAuth(app);
+        const rtdbUrl = `https://${config.projectId}-default-rtdb.firebaseio.com`; 
+        dbInstance = getDatabase(app, rtdbUrl);
+        window.appState.firebaseReady = true;
+
+        setupAuthCallbacks(auth);
+        setupRealtimeSync();
+      } catch (error) {
+        console.warn("Realtime Firebase database failed, offline system enabled:", error);
+        // Fall back to localized guest state immediately so preview compiles smoothly
+        loadLocalSession();
+      }
+    }
+
+    // AUTH ACTION CALLBACKS
+    function setupAuthCallbacks(auth) {
+      onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+          window.appState.user = firebaseUser;
+          
+          // Get user details or provision template user details
+          const userRef = ref(dbInstance, 'users/' + firebaseUser.uid);
+          const snapshot = await get(userRef);
+          if (snapshot.exists()) {
+            const val = snapshot.val();
+            window.appState.coins = val.coins || 50;
+            window.appState.streak = val.streak || 1;
+            window.appState.lastCheckIn = val.lastCheckIn || null;
+            window.appState.vip = val.isVIP || false;
+            if (val.branding) {
+              window.appState.branding = val.branding;
+            }
+          } else {
+            // First time signup details template
+            const signupPayload = {
+              name: firebaseUser.displayName || "Studio Designer",
+              email: firebaseUser.email,
+              coins: 50,
+              streak: 1,
+              isVIP: false,
+              branding: {
+                name: firebaseUser.displayName || "Studio Creator",
+                phone: "+91 9988776655",
+                instagram: "@creator_shop",
+                logo: null
+              }
+            };
+            await set(userRef, signupPayload);
+            window.appState.coins = 50;
+            window.appState.vip = false;
+          }
+
+          document.getElementById('screen-auth').style.opacity = '0';
+          setTimeout(() => document.getElementById('screen-auth').style.display = 'none', 300);
+          updateBrandingUIFields();
+          syncHeaderProfile();
+          triggerStreakCalendarUI();
+        } else {
+          window.appState.user = null;
+          document.getElementById('screen-auth').style.display = 'flex';
+          setTimeout(() => document.getElementById('screen-auth').style.opacity = '1', 50);
+        }
+      });
+    }
+
+    // GUEST LOGIN IMPLEMENTATION
+    window.handleGuestLogin = async () => {
+      loadLocalSession();
+      document.getElementById('screen-auth').style.opacity = '0';
+      setTimeout(() => document.getElementById('screen-auth').style.display = 'none', 300);
+      syncHeaderProfile();
+      triggerStreakCalendarUI();
+      updateBrandingUIFields();
+      showToastAlert("Logged in as Guest! 🎨");
+    };
+
+    function loadLocalSession() {
+      // Local caching strategy
+      const guestSess = localStorage.getItem('crafto_local_guest');
+      if (guestSess) {
+        const decoded = JSON.parse(guestSess);
+        window.appState.coins = decoded.coins || 50;
+        window.appState.branding = decoded.branding || window.appState.branding;
+        window.appState.vip = decoded.vip || false;
+      }
+      syncHeaderProfile();
+    }
+
+    function saveLocalSession() {
+      const payload = {
+        coins: window.appState.coins,
+        branding: window.appState.branding,
+        vip: window.appState.vip
+      };
+      localStorage.setItem('crafto_local_guest', JSON.stringify(payload));
+    }
+
+    // TRIGGER EMAILS REGISTER/LOGIN
+    window.handleAuthSubmit = async (event) => {
+      event.preventDefault();
+      if (!window.appState.firebaseReady) {
+        showToastAlert("Database system not ready yet. Try Guest Access!");
+        return;
+      }
+
+      const email = document.getElementById('auth-email').value;
+      const pass = document.getElementById('auth-pass').value;
+      const auth = getAuth();
+
+      try {
+        if (window.appState.authTab === 'login') {
+          await signInWithEmailAndPassword(auth, email, pass);
+          showToastAlert("Welcome Back to Crafter Studio! 🎉");
+        } else {
+          // Signup flow
+          const name = document.getElementById('auth-name').value;
+          const user = document.getElementById('auth-username').value;
+          const tel = document.getElementById('auth-number').value;
+
+          const credentials = await createUserWithEmailAndPassword(auth, email, pass);
+          const userRef = ref(dbInstance, 'users/' + credentials.user.uid);
+          await set(userRef, {
+            name: name,
+            username: user,
+            email: email,
+            phone: tel,
+            coins: 50,
+            streak: 1,
+            isVIP: false,
+            branding: {
+              name: name,
+              phone: tel,
+              instagram: "@" + user,
+              logo: null
+            }
+          });
+          showToastAlert("Designer account registered successfully!");
+        }
+      } catch (error) {
+        console.error("Auth Fail:", error);
+        showToastAlert(error.message);
+      }
+    };
+
+    window.toggleAuthTab = (type) => {
+      window.appState.authTab = type;
+      const signupBox = document.getElementById('signup-extra-inputs');
+      const btnTabLogin = document.getElementById('btn-tab-login');
+      const btnTabSignup = document.getElementById('btn-tab-signup');
+      const btnLabel = document.getElementById('auth-btn-label');
+
+      if (type === 'login') {
+        signupBox.style.display = 'none';
+        btnTabLogin.style.background = 'var(--bg-glass-active)';
+        btnTabSignup.style.background = 'transparent';
+        btnLabel.innerText = "Access Portal";
+      } else {
+        signupBox.style.display = 'block';
+        btnTabLogin.style.background = 'transparent';
+        btnTabSignup.style.background = 'var(--bg-glass-active)';
+        btnLabel.innerText = "Register & Create";
+      }
+    };
+
+    window.handleUserSignOut = async () => {
+      if (window.appState.firebaseReady) {
+        const auth = getAuth();
+        await signOut(auth);
+      }
+      window.appState.user = null;
+      localStorage.removeItem('crafto_local_guest');
+      location.reload();
+    };
+
+    // SYNC HEADER STATE & GREETINGS
+    function syncHeaderProfile() {
+      const hours = new Date().getHours();
+      let greets = "Good morning ✨";
+      if (hours >= 12 && hours < 17) greets = "Good afternoon 🎨";
+      else if (hours >= 17) greets = "Good evening 🌟";
+
+      document.getElementById('header-salutation').innerText = greets;
+      document.getElementById('header-user-name').innerText = window.appState.user ? (window.appState.user.displayName || "Creator Designer") : "Guest Designer";
+      document.getElementById('header-coin-count').innerText = window.appState.coins;
+      document.getElementById('vip-header-badge').style.display = window.appState.vip ? 'block' : 'none';
+    }
+
+    // CLOUDINARY UPLOAD PRESETS & DRAFT CONVERSIONS
+    async function uploadCloudinaryFile(file) {
+      // Direct integration with user settings configuration
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', "canvas_preset");
+      
+      try {
+        const response = await fetch("https://api.cloudinary.com/v1_1/dl7qwh9pa/image/upload", {
+          method: "POST",
+          body: formData
+        });
+        if (!response.ok) throw new Error("Failed Cloudinary Connection");
+        const json = await response.json();
+        return json.secure_url;
+      } catch (err) {
+        console.warn("Direct Cloudinary connection inactive, generating cached Data URL:", err);
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    // REAL-TIME POSTER RENDER DESIGN (CANVAS ENGINE)
+    const canvas = document.getElementById('poster-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // PRELOAD CANVAS WITH SAMPLE IMAGE
+    function renderMainCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (window.appState.currentBackground) {
+        ctx.drawImage(window.appState.currentBackground, 0, 0, canvas.width, canvas.height);
+      } else {
+        // Neon luxury background gradient
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        grad.addColorStop(0, '#0f0c20');
+        grad.addColorStop(1, '#05020c');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = "rgba(139, 92, 246, 0.1)";
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2, canvas.height / 2, 400, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // BRANDING BANNER OVERLAY
+      if (window.appState.brandingToggled) {
+        const bannerHt = 140;
+        ctx.fillStyle = "rgba(0, 0, 0, 0.82)";
+        ctx.fillRect(0, canvas.height - bannerHt, canvas.width, bannerHt);
+
+        // Render branding details
+        ctx.fillStyle = "#FFF";
+        ctx.font = "bold 26px Poppins";
+        ctx.textAlign = "left";
+        ctx.fillText(window.appState.branding.name || "Tiwary Designing", 160, canvas.height - 80);
+
+        ctx.fillStyle = "#9CA3AF";
+        ctx.font = "500 22px Inter";
+        ctx.fillText(window.appState.branding.instagram || "@tiwary_design", 160, canvas.height - 40);
+
+        // WhatsApp Phone
+        ctx.fillStyle = "#10B981";
+        ctx.font = "bold 24px Poppins";
+        ctx.textAlign = "right";
+        ctx.fillText(window.appState.branding.phone || "+91 9988776655", canvas.width - 40, canvas.height - 60);
+
+        // Business Logo / Icon
+        if (window.appState.brandLogoImg) {
+          ctx.beginPath();
+          ctx.arc(90, canvas.height - 70, 45, 0, Math.PI*2);
+          ctx.clip();
+          ctx.drawImage(window.appState.brandLogoImg, 45, canvas.height - 115, 90, 90);
+          // Restore context reset clipping
+          ctx.beginPath();
+        } else {
+          // Circle marker fallback
+          ctx.fillStyle = "var(--neon-purple)";
+          ctx.beginPath();
+          ctx.arc(90, canvas.height - 70, 45, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.fillStyle = "#FFf";
+          ctx.font = "bold 32px Poppins";
+          ctx.textAlign = "center";
+          ctx.fillText("AI", 90, canvas.height - 58);
+        }
+      }
+
+      // RENDER EDITABLE TEXT LAYERS
+      window.appState.textLayers.forEach((layer) => {
+        ctx.fillStyle = layer.color || "#FFF";
+        ctx.font = `bold ${layer.size || 34}px ${layer.font || 'Poppins'}`;
+        ctx.textAlign = layer.align || "center";
+        
+        // Dynamic alignment
+        const posX = layer.x * canvas.width;
+        const posY = layer.y * canvas.height;
+
+        // Custom shadow
+        ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
+        ctx.shadowBlur = 12;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+
+        ctx.fillText(layer.text, posX, posY);
+
+        // Clear shadow config
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+      });
+    }
+
+    // EDITING SUITE CONTROLS
+    window.switchEditorMode = (mode) => {
+      window.appState.editorMode = mode;
+      document.getElementById('btn-editor-poster').classList.toggle('active-edit-tab', mode==='poster');
+      document.getElementById('btn-editor-quote').classList.toggle('active-edit-tab', mode==='quote');
+      
+      const aiQuotesWidget = document.getElementById('ai-quote-builder-widget');
+      aiQuotesWidget.style.display = mode === 'quote' ? 'block' : 'none';
+
+      if (mode === 'quote') {
+        window.appState.textLayers[0].text = "Press button below to generate premium AI quotes!";
+        window.appState.textLayers[1].text = "~ AI Quote engine";
+      } else {
+        window.appState.textLayers[0].text = "Celebrate Joyful Holi! 🎉";
+        window.appState.textLayers[1].text = "Tiwari Art Group & Branded Products";
+      }
+      renderMainCanvas();
+    };
+
+    window.switchActiveTextLayer = (id) => {
+      window.appState.activeTextLayer = parseInt(id);
+      const layer = window.appState.textLayers[window.appState.activeTextLayer];
+      document.getElementById('layer-text-value').value = layer.text;
+      document.getElementById('size-slider').value = layer.size;
+    };
+
+    window.updateActiveLayerText = (text) => {
+      window.appState.textLayers[window.appState.activeTextLayer].text = text;
+      renderMainCanvas();
+    };
+
+    window.setLayerSize = (val) => {
+      window.appState.textLayers[window.appState.activeTextLayer].size = parseInt(val);
+      renderMainCanvas();
+    };
+
+    window.setLayerColor = (val) => {
+      window.appState.textLayers[window.appState.activeTextLayer].color = val;
+      renderMainCanvas();
+    };
+
+    window.moveTextLayer = (dir) => {
+      const layer = window.appState.textLayers[window.appState.activeTextLayer];
+      if (dir === 'up') layer.y -= 0.02;
+      if (dir === 'down') layer.y += 0.02;
+      if (dir === 'left') layer.x -= 0.02;
+      if (dir === 'right') layer.x += 0.02;
+      if (dir === 'scale-up') layer.size += 2;
+      if (dir === 'scale-down') layer.size -= 2;
+
+      renderMainCanvas();
+    };
+
+    window.toggleBrandingOverlay = () => {
+      window.appState.brandingToggled = !window.appState.brandingToggled;
+      const toggleBtn = document.getElementById('toggle-branding-bar');
+      toggleBtn.classList.toggle('toggled-on', window.appState.brandingToggled);
+      renderMainCanvas();
+    };
+
+    // SWAP CANVAS IMAGE (LOAD FROM PRESSET)
+    window.swapCanvasBackground = (imgUrl) => {
+      const imageNode = new Image();
+      imageNode.crossOrigin = "anonymous";
+      imageNode.src = imgUrl;
+      imageNode.onload = () => {
+        window.appState.currentBackground = imageNode;
+        renderMainCanvas();
+      };
+    };
+
+    // FILE IMAGE INSERTION (AVATARS / BG / LOGO)
+    window.handleImageInsertion = async (event, destination) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      showToastAlert("Optimizing & loading media standard...");
+      const cloudUrl = await uploadCloudinaryFile(file);
+
+      if (destination === 'avatar') {
+        const avatarImgs = [document.getElementById('header-user-avatar'), document.getElementById('profile-edit-avatar')];
+        avatarImgs.forEach(img => img.src = cloudUrl);
+        
+        if (window.appState.user && dbInstance) {
+          update(ref(dbInstance, 'users/' + window.appState.user.uid), { avatar: cloudUrl });
+        }
+        showToastAlert("Profile picture updated!");
+      } else if (destination === 'logo') {
+        const logoImg = new Image();
+        logoImg.crossOrigin = "anonymous";
+        logoImg.src = cloudUrl;
+        logoImg.onload = () => {
+          window.appState.brandLogoImg = logoImg;
+          window.appState.branding.logo = cloudUrl;
+          renderMainCanvas();
+          showToastAlert("Brand logo embedded!");
+        };
+      } else if (destination === 'background') {
+        swapCanvasBackground(cloudUrl);
+        showToastAlert("Canvas frame swapped!");
+      }
+    };
+
+    // SAVE BRANDING INFO
+    window.saveBrandingProfile = async (e) => {
+      e.preventDefault();
+      const n = document.getElementById('brand-input-title').value;
+      const t = document.getElementById('brand-input-phone').value;
+      const i = document.getElementById('brand-input-instagram').value;
+      const b = document.getElementById('brand-input-bio').value;
+
+      window.appState.branding.name = n;
+      window.appState.branding.phone = t;
+      window.appState.branding.instagram = i;
+      
+      if (window.appState.user && dbInstance) {
+        await update(ref(dbInstance, 'users/' + window.appState.user.uid + '/branding'), window.appState.branding);
+        showToastAlert("Branding details fully synced to Cloud! ✨");
+      } else {
+        saveLocalSession();
+        showToastAlert("Session modified locally!");
+      }
+      renderMainCanvas();
+    };
+
+    // AI SUGGESTED QUOTES PULLER
+    window.triggerAIQuoteGeneration = async () => {
+      const cat = document.getElementById('ai-quote-category').value;
+      showToastAlert("Gemini AI is constructing response... ✨");
+
+      try {
+        const response = await fetch("/api/generate-quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ category: cat })
+        });
+        
+        if (!response.ok) throw new Error("Gemini AI busy");
+        const data = await response.json();
+        
+        window.appState.textLayers[0].text = `"${data.text}"`;
+        window.appState.textLayers[1].text = `~ ${data.author}`;
+        renderMainCanvas();
+        showToastAlert("AI premium quotes embedded beautifully!");
+      } catch (error) {
+        showToastAlert("Generation failed. Try using Success or Motivation categories.");
+      }
+    };
+
+    // DOWNLOAD IMAGE (HIGH QUALITY SOCIAL RENDERS)
+    window.handleDownloadPoster = () => {
+      // Direct high quality exports
+      const dataUrl = canvas.toDataURL("image/png");
+      const tempLink = document.createElement('a');
+      tempLink.download = `Studio_Creation_${new Date().getTime()}.png`;
+      tempLink.href = dataUrl;
+      tempLink.click();
+      
+      // Award design coins incentive
+      window.appState.coins += 5;
+      syncHeaderProfile();
+      if (window.appState.user && dbInstance) {
+        update(ref(dbInstance, 'users/' + window.appState.user.uid), { coins: window.appState.coins });
+      } else {
+        saveLocalSession();
+      }
+      showToastAlert("Creation exported! Added +5 coins 🎁");
+    };
+
+    // STREAK REWARD HARVEST
+    window.claimDailyReward = () => {
+      const d = new Date().toISOString().split('T')[0];
+      if (window.appState.lastCheckIn === d) {
+        showToastAlert("Reward already collected. Check back tomorrow!");
+        return;
+      }
+
+      const rewardMapping = [10, 15, 20, 25, 30, 40, 50];
+      const bonus = rewardMapping[(window.appState.streak - 1) % 7];
+      window.appState.coins += bonus;
+      window.appState.lastCheckIn = d;
+      window.appState.streak += 1;
+
+      if (window.appState.user && dbInstance) {
+        update(ref(dbInstance, 'users/' + window.appState.user.uid), {
+          coins: window.appState.coins,
+          streak: window.appState.streak,
+          lastCheckIn: d
+        });
+      } else {
+        saveLocalSession();
+      }
+
+      syncHeaderProfile();
+      triggerStreakCalendarUI();
+      showToastAlert(`Claimed +${bonus} coins bonus! 🎁`);
+    };
+
+    function triggerStreakCalendarUI() {
+      const activeStreakIndex = (window.appState.streak - 1) % 7;
+      for (let i = 1; i <= 7; i++) {
+        const cell = document.getElementById(`streak-day-${i}`);
+        if (cell) {
+          if (i <= activeStreakIndex) {
+            cell.classList.add('claimed');
+            cell.innerHTML = `Day ${i} <i class="fa-solid fa-circle-check" style="color:var(--neon-cyan); margin-top:4.1px;"></i>`;
+          } else {
+            cell.classList.remove('claimed');
+          }
+        }
+      }
+    }
+
+    // SYNC SOCIAL INTENTS
+    window.shareSocialIntent = (channel) => {
+      let url = `https://tiwarystudio.share`;
+      if (channel === 'whatsapp') {
+        window.open(`https://api.whatsapp.com/send?text=Create%20stunning%20personalized%20festival%20posters%20with%20me%20on%20AI%20Studio!%20Join%20using%20referral%20code%20${window.appState.branding.instagram}%20at%20${encodeURIComponent(url)}`);
+      } else {
+        showToastAlert("Sharing Studio link generated and saved!");
+      }
+      closeModalDirect('modal-share');
+    };
+
+    // DYNAMIC VIEW NAVIGATION SYSTEM
+    window.switchView = (viewId) => {
+      window.appState.activeView = viewId;
+      
+      const screens = ['home', 'explore', 'create', 'trending', 'profile'];
+      screens.forEach((id) => {
+        const el = document.getElementById(`view-${id}`);
+        const navEl = document.getElementById(`nav-${id}`);
+        if (el) el.classList.toggle('active-view', id === viewId);
+        if (navEl) navEl.classList.toggle('active-nav', id === viewId);
+      });
+
+      if (viewId === 'create') {
+        renderMainCanvas();
+      }
+    };
+
+    // EXPLORE & SEARCH ENGINE
+    function populatePresetsUI() {
+      const editorCarousel = document.getElementById('editor-presets-carousel');
+      const exploreGrid = document.getElementById('explore-results-grid');
+      const trendingGrid = document.getElementById('trending-templates-grid');
+
+      if (editorCarousel) editorCarousel.innerHTML = "";
+      if (exploreGrid) exploreGrid.innerHTML = "";
+      if (trendingGrid) trendingGrid.innerHTML = "";
+
+      fallbackTemplates.forEach((t, index) => {
+        // Carousel Presets
+        if (editorCarousel) {
+          const item = document.createElement('div');
+          item.className = `preset-circular-item ${index===0 ? 'selected-preset' : ''}`;
+          item.innerHTML = `<img src="${t.image}" alt="">`;
+          item.onclick = () => {
+            document.querySelectorAll('.preset-circular-item').forEach(el=>el.classList.remove('selected-preset'));
+            item.classList.add('selected-preset');
+            swapCanvasBackground(t.image);
+            if (t.textLayers) {
+              window.appState.textLayers[0].text = t.textLayers[0].text;
+              window.appState.textLayers[1].text = t.textLayers[1].text;
+            }
+          };
+          editorCarousel.appendChild(item);
+        }
+
+        // Explore Templates
+        if (exploreGrid) {
+          const tile = document.createElement('div');
+          tile.className = "creator-item-tile";
+          tile.innerHTML = `
+            <img src="${t.image}" alt="">
+            <div class="tile-brand-shield">${t.category}</div>
+            <div class="tile-footer">
+              <span class="tile-title">${t.title}</span>
+              <button class="heart-like-button" onclick="likeTemplate(event, '${t.id}')"><i class="fa-solid fa-heart"></i></button>
+            </div>
+          `;
+          tile.onclick = () => {
+            switchView('create');
+            swapCanvasBackground(t.image);
+            if (t.textLayers) {
+              window.appState.textLayers[0].text = t.textLayers[0].text;
+              window.appState.textLayers[1].text = t.textLayers[1].text;
+            }
+          };
+          exploreGrid.appendChild(tile);
+        }
+
+        // Trending Cards layout
+        if (index < 4) {
+          if (trendingGrid) {
+            const tile = document.createElement('div');
+            tile.className = "creator-item-tile";
+            tile.innerHTML = `
+              <img src="${t.image}" alt="">
+              <div class="tile-brand-shield">TRENDING</div>
+              <div class="tile-footer">
+                <span class="tile-title">${t.title}</span>
+                <button class="heart-like-button active-like" onclick="likeTemplate(event, '${t.id}')"><i class="fa-solid fa-heart" style="color:red;"></i></button>
+              </div>
+            `;
+            tile.onclick = () => {
+              switchView('create');
+              swapCanvasBackground(t.image);
+              if (t.textLayers) {
+                window.appState.textLayers[0].text = t.textLayers[0].text;
+                window.appState.textLayers[1].text = t.textLayers[1].text;
+              }
+            };
+            trendingGrid.appendChild(tile);
+          }
+        }
+      });
+    }
+
+    window.selectSearchCategory = (cat) => {
+      const chips = document.querySelectorAll('#explore-categories-scroller .chip-tab');
+      chips.forEach((c) => {
+        const isMatched = c.getAttribute('data-category') === cat;
+        c.classList.toggle('active-chip', isMatched);
+      });
+
+      const exploreGrid = document.getElementById('explore-results-grid');
+      exploreGrid.innerHTML = "";
+      
+      const filtered = cat === 'all' ? fallbackTemplates : fallbackTemplates.filter(t => t.category === cat);
+      filtered.forEach((t) => {
+        const tile = document.createElement('div');
+        tile.className = "creator-item-tile";
+        tile.innerHTML = `
+          <img src="${t.image}" alt="">
+          <div class="tile-brand-shield">${t.category}</div>
+          <div class="tile-footer">
+            <span class="tile-title">${t.title}</span>
+            <button class="heart-like-button" onclick="likeTemplate(event, '${t.id}')"><i class="fa-solid fa-heart"></i></button>
+          </div>
+        `;
+        tile.onclick = () => {
+          switchView('create');
+          swapCanvasBackground(t.image);
+          if (t.textLayers) {
+            window.appState.textLayers[0].text = t.textLayers[0].text;
+            window.appState.textLayers[1].text = t.textLayers[1].text;
+          }
+        };
+        exploreGrid.appendChild(tile);
+      });
+    };
+
+    window.handleSearchQuery = (val) => {
+      const query = val.toLowerCase();
+      const exploreGrid = document.getElementById('explore-results-grid');
+      exploreGrid.innerHTML = "";
+      
+      const matched = fallbackTemplates.filter(t => t.title.toLowerCase().includes(query) || t.category.toLowerCase().includes(query));
+      matched.forEach((t) => {
+        const tile = document.createElement('div');
+        tile.className = "creator-item-tile";
+        tile.innerHTML = `
+          <img src="${t.image}" alt="">
+          <div class="tile-brand-shield">${t.category}</div>
+          <div class="tile-footer">
+            <span class="tile-title">${t.title}</span>
+          </div>
+        `;
+        tile.onclick = () => {
+          switchView('create');
+          swapCanvasBackground(t.image);
+        };
+        exploreGrid.appendChild(tile);
+      });
+    };
+
+    // TOASTS MESSAGES ALERT
+    function showToastAlert(msg) {
+      const banner = document.getElementById('inapp-notification');
+      document.getElementById('notif-title').innerText = "Creative Studio Notification";
+      document.getElementById('notif-body').innerText = msg;
+      banner.classList.add('visible-banner');
+      setTimeout(() => banner.classList.remove('visible-banner'), 4500);
+    }
+
+    // TOAST BELL ACTIONS
+    window.dismissNotification = () => {
+      document.getElementById('inapp-notification').classList.remove('visible-banner');
+    };
+
+    window.openSocialShareModal = () => {
+      document.getElementById('modal-share').classList.add('active-modal');
+    };
+
+    window.closeShareModal = (event) => {
+      if (event.target.classList.contains('onclick-dismiss')) {
+        document.getElementById('modal-share').classList.remove('active-modal');
+      }
+    };
+
+    window.closeModalDirect = (id) => {
+      document.getElementById(id).classList.remove('active-modal');
+    };
+
+    function updateBrandingUIFields() {
+      document.getElementById('brand-input-title').value = window.appState.branding.name || "";
+      document.getElementById('brand-input-phone').value = window.appState.branding.phone || "";
+      document.getElementById('brand-input-instagram').value = window.appState.branding.instagram || "";
+    }
+
+    // REAL-TIME NOTIFICATIONS PULL FROM FIREBASE
+    function setupRealtimeSync() {
+      if (!dbInstance) return;
+      const settingsRef = ref(dbInstance, 'settings');
+      onValue(settingsRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const s = snapshot.val();
+          if (s.maintenanceMode) {
+            alert("App is in Maintenance Mode! Admin is upgrading features.");
+          }
+        }
+      });
+    }
+
+    // BOOTSTRAP INITIAL LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      initFirebaseConnection();
+      populatePresetsUI();
+      // Load standard preset circular background
+      swapCanvasBackground("https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&q=80&w=800");
+
+      const codeGen = "REF_" + Math.random().toString(36).substr(2, 6).toUpperCase();
+      document.getElementById('invite-code-box').value = codeGen;
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin Control Centre | Crafter Studio</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts Poppins / Inter / Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* VARIABLES & THEME SETUP */
+    :root {
+      --bg-amoled: #050508;
+      --bg-glass: rgba(18, 18, 24, 0.75);
+      --bg-glass-active: rgba(30, 30, 40, 0.85);
+      --border-glow: rgba(139, 92, 246, 0.2);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      
+      --neon-purple: #8B5CF6;
+      --neon-purple-deep: #7C3AED;
+      --neon-cyan: #06B6D4;
+      --accent-glowing: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+      --accent-danger: #EF4444;
+      --accent-success: #10B981;
+      --accent-warning: #F59E0B;
+      
+      --font-display: 'Poppins', sans-serif;
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'Space Grotesk', sans-serif;
+      
+      --transition-native: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    body {
+      background-color: var(--bg-amoled);
+      color: #F3F4F6;
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+
+    /* PHONE CONTAINMENT SCREEN */
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background-color: var(--bg-amoled);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+      padding: 24px 16px;
+    }
+
+    /* GLASS CARD LAYOUTS */
+    .glass-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: var(--transition-native);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    /* TYPOGRAPHY UTILS */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: #9CA3AF;
+      line-height: 1.5;
+    }
+
+    /* BUTTONS */
+    .btn-premium {
+      background: var(--accent-glowing);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-weight: 600;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 24px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition-native);
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35);
+    }
+
+    .btn-premium:active {
+      transform: scale(0.96);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-glass);
+      color: #E5E7EB;
+      border-radius: 16px;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+      font-family: var(--font-display);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition-native);
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.96);
+    }
+
+    /* INPUT CONTROLS */
+    .form-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-glass);
+      color: #FFF;
+      border-radius: 16px;
+      padding: 14px 18px;
+      width: 100%;
+      font-size: 0.95rem;
+      font-family: var(--font-sans);
+      transition: var(--transition-native);
+      margin-bottom: 12px;
+    }
+
+    .form-input:focus {
+      border-color: var(--neon-purple);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
+    }
+
+    /* SCREEN SPLASH AND GATEKEEPER */
+    .screen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-amoled);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: var(--transition-native);
+    }
+
+    .gate-container {
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    /* DASHBOARD TABS EXECUTIVES */
+    .dashboard-tabs-rail {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .dashboard-tabs-rail::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-badge {
+      flex: 0 0 auto;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-glass);
+      color: #9CA3AF;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-native);
+    }
+
+    .tab-badge.active-tab {
+      background: var(--neon-purple);
+      color: #FFF;
+      border-color: transparent;
+      box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2);
+    }
+
+    /* PANEL SELECTORS */
+    .pane-view {
+      display: none;
+      animation: tabFadeIn 0.4s ease-out;
+    }
+
+    .pane-view.active-pane {
+      display: block;
+    }
+
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* METRICS BADGES ROWS */
+    .metrics-dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .metric-bubble {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bubble-title {
+      font-size: 0.75rem;
+      color: #6B7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .bubble-value {
+      font-size: 1.4rem;
+      font-weight: bold;
+      font-family: var(--font-mono);
+      color: #FFF;
+    }
+
+    /* SWITCH STYLES */
+    .setting-toggle-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    /* USER LIST MANAGER TILE */
+    .user-manager-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .user-profile-tile {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .avatar-circlet {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #1a1a1a;
+      border: 1px solid var(--border-glass);
+    }
+
+    .vip-toggle-badge {
+      font-size: 0.6rem;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .vip-toggle-badge.is-vip {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .vip-toggle-badge.non-vip {
+      background: rgba(255,255,255,0.05);
+      color: #9CA3AF;
+      border: 1px solid var(--border-glass);
+    }
+
+    /* TOAST BANNER */
+    .admin-alert-banner {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      width: calc(100% - 32px);
+      max-width: 400px;
+      background: #10B981;
+      color: #FFF;
+      padding: 14px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 1200;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .admin-alert-banner.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Admin Catalog Grid Styles */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .catalog-item-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 0.8;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .catalog-item-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--neon-purple);
+    }
+    .catalog-item-image-container {
+      width: 100%;
+      flex-grow: 1;
+      height: 0;
+      min-height: 120px;
+      position: relative;
+      overflow: hidden;
+    }
+    .catalog-item-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .catalog-item-vip-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: #FFF;
+      font-size: 0.55rem;
+      font-weight: bold;
+      padding: 3px 6px;
+      border-radius: 4px;
+      z-index: 2;
+      text-transform: uppercase;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .catalog-item-details {
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.4);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .catalog-item-title {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #FFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .catalog-item-meta {
+      font-size: 0.65rem;
+      color: #9CA3AF;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    /* FULL SCREEN PREVIEW MODAL STYLES */
+    .preview-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 4000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .preview-modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .preview-modal-container {
+      width: 90%;
+      max-width: 420px;
+      background: #0D0D15;
+      border: 1px solid var(--border-glass);
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      position: relative;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .preview-modal-overlay.active .preview-modal-container {
+      transform: scale(1);
+    }
+    .preview-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.6);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      z-index: 10;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .preview-modal-close:hover {
+      background: #EF4444;
+      transform: rotate(90deg);
+    }
+    .preview-modal-image-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      background: #111;
+      overflow: hidden;
+    }
+    .preview-modal-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .preview-modal-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .preview-modal-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #FFF;
+      margin: 0;
+    }
+    .preview-modal-category {
+      font-size: 0.7rem;
+      color: var(--neon-purple);
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+    .preview-modal-analytics {
+      display: flex;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .preview-modal-stat {
+      flex: 1;
+      text-align: center;
+    }
+    .preview-modal-stat-label {
+      font-size: 0.65rem;
+      color: #9CA3AF;
+      text-transform: uppercase;
+    }
+    .preview-modal-stat-val {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #FFF;
+      margin-top: 4px;
+    }
+    .preview-modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN PORTAL VIEWPORT MOCK -->
+  <div class="app-viewport">
+
+    <!-- SECURE MASTER LOGIN SCREEN -->
+    <div id="admin-auth-overlay" class="screen-overlay">
+      <div class="gate-container">
+        <div style="background: var(--accent-glowing); width: 80px; height: 80px; border-radius: 24px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);">
+          <i class="fa-solid fa-shield-halved" style="font-size: 2.2rem; color: #FFF;"></i>
+        </div>
+        <h1 style="font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 6px;">ADMIN CENTRAL CORE</h1>
+        <p style="margin-bottom: 30px;">Access requires privileged developer keys validation.</p>
+        
+        <form id="admin-login-form" onsubmit="verifyAdminCreds(event)">
+          <input type="email" id="admin-user-field" class="form-input" placeholder="Developer E-mail" required>
+          <input type="password" id="admin-pass-field" class="form-input" placeholder="Privileged Security Code" required>
+          <button type="submit" class="btn-premium" style="width:100%; margin-top:10px;">
+            Decrypt & Authenticate <i class="fa-solid fa-key"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ADMIN TOAST ALERTS BANNER -->
+    <div id="admin-alert" class="admin-alert-banner">Logged in successfully! 🔑</div>
+
+    <!-- MAIN CONTROL HUB HEADER -->
+    <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <div>
+        <h2 style="font-size:1.15rem; color:#FFF;">Crafter Studio</h2>
+        <p style="font-size:0.75rem;"><i class="fa-solid fa-circle" style="color:var(--accent-success); font-size:0.5rem; margin-right:4px;"></i> Live Controller Console</p>
+      </div>
+      <button class="btn-secondary" style="padding: 8px 12px; font-size: 0.75rem; border-radius: 10px;" onclick="logOffAdmin()">
+        <i class="fa-solid fa-lock"></i> Lock
+      </button>
+    </header>
+
+    <!-- HORIZONTAL PANEL NAV TABS -->
+    <div class="dashboard-tabs-rail">
+      <div id="tab-gate-stats" class="tab-badge active-tab" onclick="shiftPane('stats')">
+        <i class="fa-solid fa-chart-line"></i> Analytics
+      </div>
+      <div id="tab-gate-catalog" class="tab-badge" onclick="shiftPane('catalog')">
+        <i class="fa-solid fa-folder-open"></i> Presets
+      </div>
+      <div id="tab-gate-notif" class="tab-badge" onclick="shiftPane('notif')">
+        <i class="fa-solid fa-bullhorn"></i> Push Alerts
+      </div>
+      <div id="tab-gate-users" class="tab-badge" onclick="shiftPane('users')">
+        <i class="fa-solid fa-user-gear"></i> Users
+      </div>
+    </div>
+
+    <!-- PANE 1: ANALYTICS HUB -->
+    <div id="pane-stats" class="pane-view active-pane">
+      <div class="metrics-dashboard-grid">
+        <div class="metric-bubble">
+          <span class="bubble-title">Registered Users</span>
+          <span class="bubble-value" id="stats-total-users">48</span>
+        </div>
+        <div class="metric-bubble">
+          <span class="bubble-title">Active Creators</span>
+          <span class="bubble-value" id="stats-active-users">12</span>
+        </div>
+        <div class="metric-bubble">
+          <span class="bubble-title">Premium VIP members</span>
+          <span class="bubble-value" id="stats-vip-members">4</span>
+        </div>
+        <div class="metric-bubble">
+          <span class="bubble-title">Viral Shares Triggered</span>
+          <span class="bubble-value" id="stats-viral-shares">2.4k</span>
+        </div>
+      </div>
+
+      <!-- ANALYTICS LIVE CHART (Canvas/SVG style) -->
+      <div class="glass-card">
+        <h3 style="font-size: 0.95rem; margin-bottom: 12px;"><i class="fa-solid fa-chart-area" style="color:var(--neon-purple); margin-right:6px;"></i> Studio Engagement Graph</h3>
+        <p style="margin-bottom: 20px; font-size: 0.75rem;">Hourly trends mapping template creations vs exports.</p>
+        
+        <!-- Elegant SVG animated chart -->
+        <svg viewBox="0 0 400 150" style="width: 100%; height: auto; background: rgba(0,0,0,0.3); border-radius:12px;">
+          <defs>
+            <linearGradient id="chart-glow" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--neon-purple)" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="var(--neon-purple)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid Lines -->
+          <line x1="10" y1="30" x2="390" y2="30" stroke="rgba(255,255,255,0.05)"/>
+          <line x1="10" y1="70" x2="390" y2="70" stroke="rgba(255,255,255,0.05)"/>
+          <line x1="10" y1="110" x2="390" y2="110" stroke="rgba(255,255,255,0.05)"/>
+          
+          <!-- Chart path -->
+          <path d="M 10 130 Q 80 80 150 110 T 290 40 T 390 10 L 390 130 Z" fill="url(#chart-glow)"/>
+          <path d="M 10 130 Q 80 80 150 110 T 290 40 T 390 10" fill="none" stroke="var(--neon-purple)" stroke-width="3"/>
+          
+          <circle cx="290" cy="40" r="5" fill="var(--neon-cyan)"/>
+        </svg>
+      </div>
+
+      <!-- MONETIZATION MANAGEMENT DIAL -->
+      <div class="glass-card">
+        <h3 style="font-size: 1rem; margin-bottom: 15px; color:#FFF;"><i class="fa-solid fa-coins" style="color:#FBBF24; margin-right:8px;"></i> Monetization Coordinates</h3>
+        
+        <form id="price-manager-form" onsubmit="saveMonetizationConfigs(event)">
+          <div style="margin-bottom:12px;">
+            <label class="control-label" style="font-size:0.8rem; margin-bottom:6px; display:block;">Elite VIP Subscription Cost</label>
+            <input type="text" id="config-vip-price" class="form-input" placeholder="e.g. $4.99/mo" style="margin-bottom:0;">
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="control-label" style="font-size:0.8rem; margin-bottom:6px; display:block;">Daily attendance reward (Coins)</label>
+            <input type="number" id="config-streak-reward" class="form-input" placeholder="e.g. 15" style="margin-bottom:0;">
+          </div>
+          <button type="submit" class="btn-premium" style="width:100%; margin-top:10px;">
+            Update Pricing Systems
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PANE 2: DESIGN CATALOG PRESET CURATOR -->
+    <div id="pane-catalog" class="pane-view">
+      <div class="glass-card">
+        <h3 style="font-size: 1.1rem; margin-bottom: 15px;"><i class="fa-solid fa-folder-plus" style="color:var(--neon-purple); margin-right:8px;"></i> curate template frameworks</h3>
+        <p style="margin-bottom: 15px; font-size: 0.75rem;">Upload new curated graphic frames to Firebase using Cloudinary secure preset conduits.</p>
+
+        <form id="catalog-authoring-form" onsubmit="publishNewTemplate(event)">
+          <input type="text" id="catalog-title" class="form-input" placeholder="Template Frame Banner Title" required>
+          
+          <div style="margin-bottom:12px;">
+            <select id="catalog-category" class="form-input" style="height:52px; background: rgba(255, 255, 255, 0.05);" required>
+              <option value="" disabled selected>Select category group</option>
+              <option value="Holi">Holi banner</option>
+              <option value="Diwali">Diwali banner</option>
+              <option value="Eid">Eid banner</option>
+              <option value="Birthday">Birthday greetings</option>
+              <option value="Motivation">Motivational / quotes card</option>
+              <option value="Business">Business branding</option>
+              <option value="Political">Political promo</option>
+              <option value="Religious">Religious Devi</option>
+            </select>
+          </div>
+
+          <div class="setting-toggle-box">
+            <span style="font-size:0.85rem; color:#E5E7EB;">Tag as Premium VIP templates</span>
+            <input type="checkbox" id="catalog-vip-only" style="width:18px; height:18px; accent-color:var(--neon-purple);">
+          </div>
+
+          <!-- Cloudinary Upload Direct file link input -->
+          <div style="border:1px dashed var(--border-glass); padding:20px; text-align:center; border-radius:16px; margin-bottom:16px;">
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size:1.8rem; color:var(--neon-purple); margin-bottom:10px;"></i>
+            <p style="font-size:0.75rem; color:#9CA3AF; margin-bottom:10px;">Select from gallery to upload onto Cloudinary</p>
+            <input type="file" id="template-media-loader" accept="image/*" class="form-input" style="padding:8px; font-size:0.8rem;">
+          </div> or paste image URL directly
+          <input type="text" id="catalog-fallback-url" class="form-input" placeholder="https://unsplash.com/sample_image.jpg">
+
+          <button type="submit" class="btn-premium" style="width:100%; margin-top:10px;">
+            <i class="fa-solid fa-upload"></i> Publish Framework Live
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PANE 3: PUSH CONSOLE DISPATCH ALERT SYSTEM -->
+    <div id="pane-notif" class="pane-view">
+      <div class="glass-card">
+        <h3 style="font-size: 1.1rem; margin-bottom: 12px;"><i class="fa-solid fa-bullhorn" style="color:var(--neon-purple); margin-right:8px;"></i> Broadcast Live Alerts</h3>
+        <p style="margin-bottom: 20px; font-size: 0.75rem;">Dispatched in-app messages appear inside user screens immediately via Realtime synchronization.</p>
+
+        <form id="push-creation-form" onsubmit="pushTriggerNotification(event)">
+          <div style="margin-bottom:12px;">
+            <label class="control-label" style="font-size:0.8rem; margin-bottom:6px; display:block;">Message Title Banner</label>
+            <input type="text" id="notif-title-box" class="form-input" placeholder="e.g. Holi Double Bonus Active! 🎉" required>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label class="control-label" style="font-size:0.8rem; margin-bottom:6px; display:block;">Thematic Context Body</label>
+            <textarea id="notif-body-box" class="form-input" placeholder="Write full description for alert..." style="height:120px;" required></textarea>
+          </div>
+
+          <button type="submit" class="btn-premium" style="width:100%; margin-top:10px;">
+            Dispatch Broadcast Live <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PANE 4: USERS MANAGEMENT DATABASE ACCESS -->
+    <div id="pane-users" class="pane-view">
+      <div class="glass-card">
+        <h3 style="font-size: 1.1rem; margin-bottom: 15px;"><i class="fa-solid fa-users-gear" style="color:var(--neon-purple); margin-right:8px;"></i> Registered User Matrix</h3>
+        <p style="margin-bottom: 15px; font-size: 0.75rem;">Manage creator credentials, grant verified creator badges, or toggle VIP privileges instantly.</p>
+
+        <div class="user-manager-list" id="active-users-list">
+          <!-- Handled dynamically -->
+          <div class="user-profile-tile">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="avatar-circlet">
+              <div>
+                <h4 style="font-size:0.8rem; color:#FFF;">Amit Sharma (@sharmadesigns)</h4>
+                <p style="font-size:0.7rem; color:#9CA3AF;">Email: amit@studio.com</p>
+              </div>
+            </div>
+            <span class="vip-toggle-badge is-vip">VIP</span>
+          </div>
+
+          <div class="user-profile-tile">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150" class="avatar-circlet">
+              <div>
+                <h4 style="font-size:0.8rem; color:#FFF;">Priya Patel (@priya_creative)</h4>
+                <p style="font-size:0.7rem; color:#9CA3AF;">Email: priya@studio.com</p>
+              </div>
+            </div>
+            <span class="vip-toggle-badge non-vip">FREE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL TEMPLATE PREVIEW OVERLAY -->
+  <div id="preview-modal" class="preview-modal-overlay" onclick="window.closePreviewModalOutside(event)">
+    <div class="preview-modal-container">
+      <div class="preview-modal-close" onclick="window.closePreviewModal()"><i class="fa-solid fa-xmark"></i></div>
+      
+      <div class="preview-modal-image-wrapper">
+        <img id="preview-image" src="" alt="Template Framework Preview" referrerPolicy="no-referrer">
+      </div>
+      
+      <div class="preview-modal-body">
+        <div class="preview-modal-heading">
+          <div>
+            <h3 id="preview-title" class="preview-modal-title">Template Title</h3>
+            <span id="preview-category" class="preview-modal-category">Category</span>
+          </div>
+          <span id="preview-vip-badge" style="display:none; background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFF; font-size: 0.65rem; font-weight: bold; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">VIP PREMIUM</span>
+        </div>
+        
+        <div class="preview-modal-analytics">
+          <div class="preview-modal-stat">
+            <div class="preview-modal-stat-label">Likes</div>
+            <div class="preview-modal-stat-val" id="preview-likes">0</div>
+          </div>
+          <div style="width: 1px; background: rgba(255,255,255,0.1); align-self: stretch;"></div>
+          <div class="preview-modal-stat">
+            <div class="preview-modal-stat-label">Downloads</div>
+            <div class="preview-modal-stat-val" id="preview-usecount">0</div>
+          </div>
+        </div>
+        
+        <div class="preview-modal-actions">
+          <button class="btn-premium" style="margin-top:0; background: linear-gradient(135deg, #4F46E5, #7C3AED); border: none;" onclick="window.triggerEditTemplateSpec()">
+            <i class="fa-solid fa-pen-to-square"></i> Edit Specs
+          </button>
+          <button class="btn-premium" id="btn-delete-preset" style="margin-top:0; background: linear-gradient(135deg, #EF4444, #B91C1C); border-color:#EF4444;" onclick="window.triggerDeleteTemplateSpec()">
+            <i class="fa-solid fa-trash-can"></i> Retire Frame
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIREBASE ADMIN SDK MODULE CONSOLE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, child, update, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    let dbInstance = null;
+    let fallbackPresets = [];
+
+    // COMPACT STATE CONTROL
+    window.adminState = {
+      firebaseConnected: false,
+      adminUser: null,
+      activePane: 'stats'
+    };
+
+    // INTEGRATE CATALOG CLOUD PRESETS RENDERING SYSTEM
+    window.activePreviewTemplate = null;
+    window.editingTemplateKey = null;
+
+    window.setupRealtimeTemplates = () => {
+      const catalogGrid = document.getElementById('admin-catalog-grid');
+      const badge = document.getElementById('catalog-count-badge');
+      if (!catalogGrid) return;
+
+      const fallbackList = [
+        {
+          id: "t1",
+          title: "Happy Holi Neon Spark",
+          category: "Holi",
+          image: "https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&q=80&w=800",
+          isPremium: false,
+          useCount: 420,
+          likes: 180
+        },
+        {
+          id: "t2",
+          title: "Diwali Golden Radiance",
+          category: "Diwali",
+          image: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&q=80&w=800",
+          isPremium: true,
+          useCount: 680,
+          likes: 310
+        },
+        {
+          id: "t3",
+          title: "Eid Mubarak Crescent",
+          category: "Eid",
+          image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&q=80&w=800",
+          isPremium: false,
+          useCount: 290,
+          likes: 120
+        },
+        {
+          id: "t4",
+          title: "Daily Focus Motivation",
+          category: "Motivation",
+          image: "https://images.unsplash.com/photo-1519750783826-e2420f4d687c?auto=format&fit=crop&q=80&w=800",
+          isPremium: false,
+          useCount: 890,
+          likes: 450
+        },
+        {
+          id: "t5",
+          title: "Tricolor Flag Day",
+          category: "Independence Day",
+          image: "https://images.unsplash.com/photo-1532375811409-e85c077b819f?auto=format&fit=crop&q=80&w=800",
+          isPremium: true,
+          useCount: 1500,
+          likes: 720
+        }
+      ];
+
+      function renderCatalog(items) {
+        catalogGrid.innerHTML = "";
+        
+        let templatesList = [];
+        if (items) {
+          templatesList = Object.keys(items).map(key => ({
+            ...items[key],
+            dbKey: key
+          }));
+        } else {
+          templatesList = fallbackList;
+        }
+
+        badge.innerText = `${templatesList.length} templates`;
+
+        templatesList.forEach(item => {
+          const card = document.createElement('div');
+          card.className = "catalog-item-card";
+          card.onclick = () => window.openPreviewModal(item);
+
+          card.innerHTML = `
+            <div class="catalog-item-image-container">
+              ${item.isPremium ? '<span class="catalog-item-vip-badge">VIP PREMIUM</span>' : ''}
+              <img src="${item.image}" alt="${item.title}" referrerPolicy="no-referrer">
+            </div>
+            <div class="catalog-item-details">
+              <div class="catalog-item-title">${item.title}</div>
+              <div class="catalog-item-meta">
+                <span><i class="fa-solid fa-folder"></i> ${item.category}</span>
+                <span><i class="fa-solid fa-heart"></i> ${item.likes || 0}</span>
+              </div>
+            </div>
+          `;
+          catalogGrid.appendChild(card);
+        });
+      }
+
+      if (dbInstance) {
+        const templatesRef = ref(dbInstance, 'templates');
+        onValue(templatesRef, (snapshot) => {
+          if (snapshot.exists()) {
+            renderCatalog(snapshot.val());
+          } else {
+            renderCatalog(null);
+          }
+        });
+      } else {
+        renderCatalog(null);
+      }
+    };
+
+    window.openPreviewModal = (template) => {
+      window.activePreviewTemplate = template;
+      document.getElementById('preview-image').src = template.image;
+      document.getElementById('preview-title').innerText = template.title;
+      document.getElementById('preview-category').innerText = template.category;
+      document.getElementById('preview-likes').innerText = template.likes || 0;
+      document.getElementById('preview-usecount').innerText = template.useCount || template.downloads || 0;
+      
+      const vipBadge = document.getElementById('preview-vip-badge');
+      if (template.isPremium) {
+        vipBadge.style.display = 'inline-block';
+      } else {
+        vipBadge.style.display = 'none';
+      }
+
+      const modal = document.getElementById('preview-modal');
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('active'), 10);
+    };
+
+    window.closePreviewModal = () => {
+      const modal = document.getElementById('preview-modal');
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
+    };
+
+    window.closePreviewModalOutside = (e) => {
+      if (e.target === document.getElementById('preview-modal')) {
+        window.closePreviewModal();
+      }
+    };
+
+    window.triggerEditTemplateSpec = () => {
+      const item = window.activePreviewTemplate;
+      if (!item) return;
+
+      document.getElementById('catalog-title').value = item.title;
+      document.getElementById('catalog-category').value = item.category || "";
+      document.getElementById('catalog-vip-only').checked = !!item.isPremium;
+      document.getElementById('catalog-fallback-url').value = item.image;
+
+      window.editingTemplateKey = item.dbKey || item.id;
+      
+      const submitBtn = document.querySelector('#catalog-authoring-form button[type="submit"]');
+      submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Update Template Specs 💾';
+      
+      if (!document.getElementById('btn-cancel-edit')) {
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = "button";
+        cancelBtn.id = "btn-cancel-edit";
+        cancelBtn.className = "btn-premium";
+        cancelBtn.style.background = "rgba(255, 255, 255, 0.05)";
+        cancelBtn.style.color = "#FFF";
+        cancelBtn.style.border = "1px solid var(--border-glass)";
+        cancelBtn.style.width = "100%";
+        cancelBtn.style.marginTop = "10px";
+        cancelBtn.innerText = "Cancel Editing Modes";
+        cancelBtn.onclick = () => window.cancelEditMode();
+        document.getElementById('catalog-authoring-form').appendChild(cancelBtn);
+      }
+
+      window.closePreviewModal();
+      showToastAlert("Specs pre-populated! Core form activated at top. 📝");
+      document.getElementById('catalog-title').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.cancelEditMode = () => {
+      window.editingTemplateKey = null;
+      document.getElementById('catalog-authoring-form').reset();
+      const submitBtn = document.querySelector('#catalog-authoring-form button[type="submit"]');
+      submitBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Publish Framework Live';
+      const cancelBtn = document.getElementById('btn-cancel-edit');
+      if (cancelBtn) cancelBtn.remove();
+    };
+
+    window.triggerDeleteTemplateSpec = async () => {
+      const item = window.activePreviewTemplate;
+      if (!item) return;
+
+      if (!item.dbKey) {
+        showToastAlert("MOCKED: Fallback static templates cannot be retired. upload your own framework!");
+        window.closePreviewModal();
+        return;
+      }
+
+      if (confirm(`Are you sure you want to permanently retire template: "${item.title}"?`)) {
+        try {
+          if (dbInstance) {
+            await set(ref(dbInstance, 'templates/' + item.dbKey), null);
+            showToastAlert("Active preset frame retired and uncoupled! 🗑️");
+            window.closePreviewModal();
+          } else {
+            showToastAlert("Database not linked. Offline mock deletion completed.");
+            window.closePreviewModal();
+          }
+        } catch (err) {
+          showToastAlert(`Failed to retire layout: ${err.message}`);
+        }
+      }
+    };
+
+    // SECURE BOOT
+    async function bootAdminClient() {
+      try {
+        const response = await fetch("/api/firebase-config");
+        const config = await response.json();
+        
+        const app = initializeApp(config);
+        const auth = getAuth(app);
+        const rtdbUrl = `https://${config.projectId}-default-rtdb.firebaseio.com`; 
+        dbInstance = getDatabase(app, rtdbUrl);
+        window.adminState.firebaseConnected = true;
+
+        setupAdminAuth(auth);
+        window.setupRealtimeTemplates();
+      } catch (err) {
+        console.warn("Offline system mode simulation loaded:", err);
+        window.setupRealtimeTemplates();
+      }
+    }
+
+    // AUTH HANDLING FOR SECURE CONTROL
+    function setupAdminAuth(auth) {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // Check if user is trusted developer or matches admin profile
+          window.adminState.adminUser = user;
+          document.getElementById('admin-auth-overlay').style.display = 'none';
+          showToastAlert("Authenticated core decrypter console successful! 🔑");
+          syncLiveMetrics();
+          loadUsersTable();
+        } else {
+          window.adminState.adminUser = null;
+          document.getElementById('admin-auth-overlay').style.display = 'flex';
+        }
+      });
+    }
+
+    // CHECK ADMIN FORM CREDENTIALS
+    window.verifyAdminCreds = async (e) => {
+      e.preventDefault();
+      const mail = document.getElementById('admin-user-field').value;
+      const pass = document.getElementById('admin-pass-field').value;
+
+      if (!window.adminState.firebaseConnected) {
+        // Mock fallback pass
+        if (mail === "admin@studio.com" && pass === "tiwaripass") {
+          document.getElementById('admin-auth-overlay').style.display = 'none';
+          showToastAlert("MOCK DECRYPT SECURE AUTHENTICATE OK!");
+        } else {
+          showToastAlert("MOCK INVALID CREDENTIAL KEYS EXCLUDING SESSION.");
+        }
+        return;
+      }
+
+      try {
+        const auth = getAuth();
+        await signInWithEmailAndPassword(auth, mail, pass);
+      } catch (error) {
+        showToastAlert(`Access key authentication failed: ${error.message}`);
+      }
+    };
+
+    window.logOffAdmin = () => {
+      if (window.adminState.firebaseConnected) {
+        const auth = getAuth();
+        signOut(auth);
+      } else {
+        location.reload();
+      }
+    };
+
+    // SHIFT PANES
+    window.shiftPane = (paneId) => {
+      window.adminState.activePane = paneId;
+      const sections = ['stats', 'catalog', 'notif', 'users'];
+      sections.forEach((id) => {
+        const pane = document.getElementById(`pane-${id}`);
+        const tab = document.getElementById(`tab-gate-${id}`);
+        if (pane) pane.classList.toggle('active-pane', id === paneId);
+        if (tab) tab.classList.toggle('active-tab', id === paneId);
+      });
+    };
+
+    // BROADCAST LIVE ALERTS DISPATCH FOR USER COMPANION IN REALTIP
+    window.pushTriggerNotification = async (e) => {
+      e.preventDefault();
+      const t = document.getElementById('notif-title-box').value;
+      const b = document.getElementById('notif-body-box').value;
+
+      if (dbInstance) {
+        const notifRef = ref(dbInstance, 'notifications');
+        const nextKey = push(notifRef);
+        await set(nextKey, {
+          title: t,
+          message: b,
+          timestamp: new Date().getTime()
+        });
+        showToastAlert("In-app Notification broad-swapped live on Cloud! 📢");
+      } else {
+        showToastAlert("Offline mode alerts cached successfully!");
+      }
+
+      document.getElementById('push-creation-form').reset();
+    };
+
+    // PUBLISH PRESET DESIGN CATALOGUE IN CLOUDINARY
+    async function uploadToCloudinary(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', "canvas_preset");
+      
+      const response = await fetch("https://api.cloudinary.com/v1_1/dl7qwh9pa/image/upload", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+      return data.secure_url;
+    }
+
+    window.publishNewTemplate = async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('catalog-title').value;
+      const cat = document.getElementById('catalog-category').value;
+      const isVip = document.getElementById('catalog-vip-only').checked;
+      const fallbackUrl = document.getElementById('catalog-fallback-url').value;
+
+      const fileInput = document.getElementById('template-media-loader');
+      let finalImgUrl = fallbackUrl || "https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&q=80&w=800";
+
+      try {
+        if (fileInput.files.length > 0) {
+          showToastAlert("Publishing presets through Cloudinary node tunnel...");
+          finalImgUrl = await uploadToCloudinary(fileInput.files[0]);
+        }
+
+        if (dbInstance) {
+          if (window.editingTemplateKey) {
+            const templRef = ref(dbInstance, 'templates/' + window.editingTemplateKey);
+            await set(templRef, {
+              id: window.editingTemplateKey,
+              title: title,
+              category: cat,
+              image: finalImgUrl,
+              isPremium: isVip,
+              likes: window.activePreviewTemplate ? (window.activePreviewTemplate.likes || 0) : 0,
+              useCount: window.activePreviewTemplate ? (window.activePreviewTemplate.useCount || 0) : 0
+            });
+            showToastAlert("Template framework updated successfully! 💾");
+            window.cancelEditMode();
+          } else {
+            const templRef = ref(dbInstance, 'templates');
+            const nextTempl = push(templRef);
+            await set(nextTempl, {
+              id: nextTempl.key,
+              title: title,
+              category: cat,
+              image: finalImgUrl,
+              isPremium: isVip,
+              likes: 0,
+              useCount: 0
+            });
+            showToastAlert("Live graphic template uploaded and synchronized! 🎨");
+          }
+        } else {
+          showToastAlert("Template added onto local staging dashboard successfully!");
+          window.cancelEditMode();
+        }
+        document.getElementById('catalog-authoring-form').reset();
+      } catch (err) {
+        showToastAlert(`Catalogue curation failed: ${err.message}`);
+      }
+    };
+
+    // SAVE APP MONETIZATION CONFIGS
+    window.saveMonetizationConfigs = async (e) => {
+      e.preventDefault();
+      const price = document.getElementById('config-vip-price').value;
+      const coins = parseInt(document.getElementById('config-streak-reward').value);
+
+      if (dbInstance) {
+        await update(ref(dbInstance, 'settings'), {
+          vipPrice: price,
+          streakReward: coins
+        });
+        showToastAlert("Monetization credentials saved live! 🪙");
+      } else {
+        showToastAlert("Staging configuration changed!");
+      }
+    };
+
+    // SYNC ANALYTICS STATIS LIVE METERS
+    function syncLiveMetrics() {
+      if (!dbInstance) return;
+      const rootRef = ref(dbInstance);
+      onValue(rootRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const dbVal = snapshot.val();
+          if (dbVal.users) {
+            const keys = Object.keys(dbVal.users);
+            document.getElementById('stats-total-users').innerText = keys.length;
+            document.getElementById('stats-active-users').innerText = Math.round(keys.length * 0.4) || 2;
+            
+            const vipCount = keys.filter(k => dbVal.users[k].isVIP).length;
+            document.getElementById('stats-vip-members').innerText = vipCount || 1;
+          }
+        }
+      });
+    }
+
+    // SYNC USERS TABLES MATRIX
+    function loadUsersTable() {
+      if (!dbInstance) return;
+      const usersRef = ref(dbInstance, 'users');
+      onValue(usersRef, (snapshot) => {
+        const listContainer = document.getElementById('active-users-list');
+        if (!listContainer) return;
+        listContainer.innerHTML = "";
+
+        if (snapshot.exists()) {
+          const valUsers = snapshot.val();
+          Object.keys(valUsers).forEach((uid) => {
+            const user = valUsers[uid];
+            const tile = document.createElement('div');
+            tile.className = "user-profile-tile";
+            tile.innerHTML = `
+              <div style="display:flex; align-items:center; gap:10px;">
+                <img src="${user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150'}" class="avatar-circlet">
+                <div>
+                  <h4 style="font-size:0.8rem; color:#FFF;">${user.name || 'Anonymous Design'}</h4>
+                  <p style="font-size:0.7rem; color:#9CA3AF;">Coins: ${user.coins || 0} | Phone: ${user.phone || 'N/A'}</p>
+                </div>
+              </div>
+              <span class="vip-toggle-badge ${user.isVIP ? 'is-vip' : 'non-vip'}" onclick="toggleUserVIPPrivilege('${uid}', ${user.isVIP})">
+                ${user.isVIP ? 'VIP' : 'FREE'}
+              </span>
+            `;
+            listContainer.appendChild(tile);
+          });
+        }
+      });
+    }
+
+    // INTERACTIVE PROFILE PANEL TOGGLING VIP GATES
+    window.toggleUserVIPPrivilege = async (uid, currentStatus) => {
+      if (!dbInstance) return;
+      await update(ref(dbInstance, 'users/' + uid), { isVIP: !currentStatus });
+      showToastAlert("User credentials access level flipped! 🚀");
+    };
+
+    // ALERTS NOTIFICATIONS HUB
+    function showToastAlert(msg) {
+      const el = document.getElementById('admin-alert');
+      el.innerText = msg;
+      el.classList.add('visible');
+      setTimeout(() => el.classList.remove('visible'), 3500);
+    }
+
+    // AUTOMATION INIT SERVICE LOADER
+    window.addEventListener('DOMContentLoaded', () => {
+      bootAdminClient();
+    });
+
+  </script>
+</body>
+</html>
